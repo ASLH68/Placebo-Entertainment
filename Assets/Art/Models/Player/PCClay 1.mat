@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PCClay 1
-  m_Shader: {fileID: -6465566751694194690, guid: 0e8e5b0816368164aab624ce6254b498, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: ebfb38158be9cfb4f9292ee6c5f43dea, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -52,6 +52,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4e928ea272cf4934cb4665e539910160, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_43b9ffee5a174ae2a0b82d69d02ef010_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d8afcd310bbaab243a952c7c1156c692, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_bac48a8c96ed403187e6760267fa4186_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 6aa48a634c36b104b8dbc27520afd6b5, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -79,10 +83,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _AO_Depth: 1
-    - _Dimple_Displace_Intensity: 0.1
+    - _Dimple_Displace_Intensity: 5
     - _Dimple_Normal_Intensity: 1
-    - _Dimple_Tiling: 20
-    - _FPS: 2
+    - _Dimple_Tiling: 30
+    - _FPS: 4
     - _Fingerprint_Intensity: 1
     - _Fingerprint_Tiling: 1
     - _Macro_Noise_Contrast: 1
