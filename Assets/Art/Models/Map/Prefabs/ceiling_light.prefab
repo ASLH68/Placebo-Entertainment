@@ -123,6 +123,10 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 835342208645068262, guid: 0eacfb7efde62e749831140f8710c38e, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4420555035905671862, guid: 0eacfb7efde62e749831140f8710c38e, type: 3}
       propertyPath: m_Name
       value: Normal Light (8)
