@@ -38,6 +38,8 @@ public class MGWire : MonoBehaviour
     [SerializeField] private GameObject _avcCable;
     [SerializeField] private GameObject _avcJack;
 
+    [SerializeField] private GameObject _wireJack;
+
     private bool _canConnectToSlot = false;
 
     private MGWireSlot _currentSlot = null;
@@ -61,6 +63,9 @@ public class MGWire : MonoBehaviour
         {
             _mgWireMovement = wireMove;
         }
+
+        if (_wireJack != null)
+            _wireJack.GetComponent<Renderer>().material = GetJackColor();
 
         _tabbedMenu = TabbedMenu.Instance;
         _cameraTrans = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
@@ -227,27 +232,27 @@ public class MGWire : MonoBehaviour
     /// the last segment so it knows to set it to a unique color.</param>
     public void CreateSegmentStruct(Transform parentObj, bool isEndSegment = false)
     {
-        GameObject segment;
-        if (isEndSegment)
-        {
-            segment = Instantiate(_avcJack);
-            segment.GetComponent<Renderer>().material = GetJackColor();
-        }
-        else
-        {
-            segment = Instantiate(_avcCable);
-        }
+    //    GameObject segment;
+    //    if (isEndSegment)
+    //    {
+    //        segment = Instantiate(_avcJack);
+    //        segment.GetComponent<Renderer>().material = GetJackColor();
+    //    }
+    //    else
+    //    {
+    //        segment = Instantiate(_avcCable);
+    //    }
 
-        /*GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+    //    /*GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        Destroy(sphere.GetComponent<Collider>());*/
+    //    Destroy(sphere.GetComponent<Collider>());*/
 
-        //Destroy(segment.GetComponent<Collider>());
+    //    //Destroy(segment.GetComponent<Collider>());
 
-        segment.gameObject.transform.parent = parentObj;
-        segment.gameObject.transform.position = parentObj.position;
+    //    segment.gameObject.transform.parent = parentObj;
+    //    segment.gameObject.transform.position = parentObj.position;
 
-        // Did this used to have the collider form?
+    //    // Did this used to have the collider form?
     }
 
     /// <summary>
