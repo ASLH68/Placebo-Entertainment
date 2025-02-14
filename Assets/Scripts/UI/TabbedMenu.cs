@@ -500,11 +500,11 @@ namespace PlaceboEntertainment.UI
             if (show)
             {
                 _interactText.text = text;
-                if (PlayerController.Instance.PlayerControls.BasicControls.ControllerDetection == null)
+                if (PlayerController.Instance.PlayerControls.BasicControls.Move.triggered)
                 {
                     _interactIcon.text = "E";
                 }
-                else if (PlayerController.Instance.PlayerControls.BasicControls.ControllerDetection != null)
+                if (PlayerController.Instance.PlayerControls.BasicControls.ControllerDetection.triggered)
                 {
                     _interactIcon.text = "X";
                 }
