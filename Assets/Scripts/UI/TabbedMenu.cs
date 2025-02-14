@@ -563,8 +563,9 @@ namespace PlaceboEntertainment.UI
             //no clue if this'll stick haha
             //AutoFitLabelControl control = new AutoFitLabelControl(newButton, 16f, 30f);
             // newButton.AddManipulator(new Clickable(click));
-            newButton.RegisterCallback<ClickEvent>(evt => click?.Invoke());
-            newButton.RegisterCallback<ClickEvent>(evt => AudioManager.PlaySoundUnManaged(clickEvent));
+            newButton.RegisterCallback<NavigationSubmitEvent>(evt => click?.Invoke());
+            newButton.RegisterCallback<NavigationSubmitEvent>(evt => AudioManager.PlaySoundUnManaged(clickEvent));
+            newButton.RegisterCallback<MouseOverEvent>(evt => newButton.Focus());
             _dialogueButtonContainer.Add(newButton);
         }
 

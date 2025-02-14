@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainGame/IntroScene.unity
     guid: 141752bf3b1737c41ae866c2047e515d
   - enabled: 1
+    path: Assets/Scenes/FUSEDemo/FUSEGameScene.unity
+    guid: 84c0d64250f51f54789370b95c3687aa
+  - enabled: 0
     path: Assets/Scenes/MainGame/GameScene.unity
     guid: 72c608e9732cb3a4ab1e92df34ff43cf
   m_configObjects: {}

@@ -13,6 +13,8 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using PlaceboEntertainment.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.Users;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -62,9 +64,14 @@ public class PauseMenu : MonoBehaviour
     private Coroutine _activeCoroutine;
     private UQueryBuilder<Button> _allButtons;
 
+    private GameObject _lastFocusedElement;
+    private Button _lastFocusedVisualElement;
+
     private List<Slider> _sliders = new List<Slider>();
     // 0 = pause, 1 = settings selection, 2 = settings submenu
     private int _currentScreenIndex = 0;
+
+    private bool _isFocused = false;
     #endregion
 
     /// <summary>
@@ -99,11 +106,23 @@ public class PauseMenu : MonoBehaviour
         _bottomTab = _pauseMenu.rootVisualElement.Q(BottomTabName);
 
         // Registering button callbacks
-        _continueButton.RegisterCallback<ClickEvent>(ContinuePressed);
-        _settingsButton.RegisterCallback<ClickEvent>(SettingsButtonClicked);
-        _audioButton.RegisterCallback<ClickEvent>(AudioButtonClicked);
-        _controlsButton.RegisterCallback<ClickEvent>(ControlsButtonClicked);
-        _exitButton.RegisterCallback<ClickEvent>(ExitToMenu);
+        _continueButton.RegisterCallback<NavigationSubmitEvent>(ContinuePressed);
+        _settingsButton.RegisterCallback<NavigationSubmitEvent>(SettingsButtonClicked);
+        _audioButton.RegisterCallback<NavigationSubmitEvent>(AudioButtonClicked);
+        _controlsButton.RegisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
+        _exitButton.RegisterCallback<NavigationSubmitEvent>(ExitToMenu);
+
+        _continueButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
+        _audioButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
+        _controlsButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_controlsButton); });
+        _settingsButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_settingsButton); });
+        _exitButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_exitButton); });
+
+        _continueButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _audioButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _controlsButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _settingsButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _exitButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
 
         // Registering animated tab related callbacks
         _continueButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_topTab, true); });
@@ -116,11 +135,22 @@ public class PauseMenu : MonoBehaviour
         _settingsButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_middleTab, false); });
         _exitButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_bottomTab, true); });
         _exitButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_bottomTab, false); });
-        
+
+        _continueButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _continueButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _audioButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _audioButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _controlsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _controlsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _settingsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _settingsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _exitButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_bottomTab, true); });
+        _exitButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_bottomTab, false); });
+
         _allButtons = _pauseMenu.rootVisualElement.Query<Button>();
         _allButtons.ForEach(button =>
         {
-            button.RegisterCallback<ClickEvent>(PlayConfirmSound);
+            button.RegisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
         });
 
         if (_tabAnimationTime <= 0)
@@ -136,9 +166,16 @@ public class PauseMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.getParameterByName("MusicVolume", out volume);
         _sliders[2].value = volume;
         _sliders[2].RegisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
-    private void PlayConfirmSound(ClickEvent evt)
+    private void PlayConfirmSound(NavigationSubmitEvent evt)
     {
         AudioManager.PlaySound(confirmEvent, transform.position);
     }
@@ -150,6 +187,7 @@ public class PauseMenu : MonoBehaviour
     {
         PlayerController.Instance.PlayerControls.BasicControls.PauseGame.performed += PauseGamePerformed;
         _tabbedMenu = TabbedMenu.Instance;
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
 
         _settingsManager = SettingsManager.Instance;
         if (_settingsManager != null)
@@ -166,17 +204,31 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
+
         // Unregistering button callbacks
-        _continueButton.UnregisterCallback<ClickEvent>(ContinuePressed);
-        _settingsButton.UnregisterCallback<ClickEvent>(SettingsButtonClicked);
-        _audioButton.UnregisterCallback<ClickEvent>(AudioButtonClicked);
-        _controlsButton.UnregisterCallback<ClickEvent>(ControlsButtonClicked);
-        _exitButton.UnregisterCallback<ClickEvent>(ExitToMenu);
-        _exitButton.UnregisterCallback<ClickEvent>(PlayConfirmSound);
-        
+        _continueButton.UnregisterCallback<NavigationSubmitEvent>(ContinuePressed);
+        _settingsButton.UnregisterCallback<NavigationSubmitEvent>(SettingsButtonClicked);
+        _audioButton.UnregisterCallback<NavigationSubmitEvent>(AudioButtonClicked);
+        _controlsButton.UnregisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
+        _exitButton.UnregisterCallback<NavigationSubmitEvent>(ExitToMenu);
+        _exitButton.UnregisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
+
+        _continueButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
+        _audioButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
+        _controlsButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_controlsButton); });
+        _settingsButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_settingsButton); });
+        _exitButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_exitButton); });
+
+        _continueButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _audioButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _controlsButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _settingsButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _exitButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+
         _allButtons.ForEach(button =>
         {
-            button.UnregisterCallback<ClickEvent>(PlayConfirmSound);
+            button.UnregisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
         });
         
         // Unregistering animated tab related callbacks
@@ -191,10 +243,28 @@ public class PauseMenu : MonoBehaviour
         _exitButton.UnregisterCallback<MouseOverEvent>(evt => { AnimateTab(_bottomTab, true); });
         _exitButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_bottomTab, false); });
 
+        _continueButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _continueButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _audioButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _audioButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _controlsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _controlsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _settingsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _settingsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _exitButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_bottomTab, true); });
+        _exitButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_bottomTab, false); });
+
         PlayerController.Instance.PlayerControls.BasicControls.PauseGame.performed -= PauseGamePerformed;
         _sliders[0].UnregisterCallback<ChangeEvent<float>>(MasterAudioSliderChanged);
         _sliders[1].UnregisterCallback<ChangeEvent<float>>(SFXAudioSliderChanged);
         _sliders[2].UnregisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
     /// <summary>
@@ -204,6 +274,9 @@ public class PauseMenu : MonoBehaviour
     public void TogglePauseMenu(bool isActive)
     {
         _isGamePaused = isActive;
+
+        if (isActive)
+            _continueButton.Focus();
         
         // Ensures mouse is still visible when pausing during dialogue
         if (_tabbedMenu != null && _tabbedMenu.DialogueVisible)
@@ -261,10 +334,53 @@ public class PauseMenu : MonoBehaviour
     }
 
     /// <summary>
+    /// Called when mouse leaves a button
+    /// </summary>
+    private void ClearButtonFocus()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        _isFocused = false;
+    }
+
+    /// <summary>
+    /// Called when the mouse hovers over a button after using a controller
+    /// to change what button is focused
+    /// </summary>
+    private void ChangeButtonFocus(Button buttonToFocus)
+    {
+        buttonToFocus.Focus();
+        _lastFocusedVisualElement = buttonToFocus;
+    }
+
+    /// <summary>
+    /// When a controller is used and the game isn't focused on something,
+    /// focus on a button
+    /// </summary>
+    private void ControllerUsed()
+    {
+        if (_isFocused) { return; }
+
+        _isFocused = true;
+
+        if (_lastFocusedVisualElement != null)
+        {
+            _lastFocusedVisualElement.Focus();
+        }
+        else if (_currentScreenIndex == 0)
+        {
+            _continueButton.Focus();
+        }
+        else if (_currentScreenIndex == 1)
+        {
+            _audioButton.Focus();
+        }
+    }
+
+    /// <summary>
     /// Invoked when continue button is pressed to disable menu
     /// </summary>
-    /// <param name="click">ClickEvent from button</param>
-    private void ContinuePressed(ClickEvent click)
+    /// <param name="click">NavigationSubmitEvent from button</param>
+    private void ContinuePressed(NavigationSubmitEvent click)
     {
         TogglePauseMenu(false);
     }
@@ -273,7 +389,7 @@ public class PauseMenu : MonoBehaviour
     /// Opens settings selection menu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void SettingsButtonClicked(ClickEvent clicked)
+    private void SettingsButtonClicked(NavigationSubmitEvent clicked)
     {
         _currentScreenIndex = 1;
         _pauseHolder.style.display = DisplayStyle.None;
@@ -284,7 +400,7 @@ public class PauseMenu : MonoBehaviour
     /// Opens audio options submenu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void AudioButtonClicked(ClickEvent clicked)
+    private void AudioButtonClicked(NavigationSubmitEvent clicked)
     {
         _currentScreenIndex = 2;
         if (_settingsManager != null)
@@ -301,7 +417,7 @@ public class PauseMenu : MonoBehaviour
     /// Opens controls options submenu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void ControlsButtonClicked(ClickEvent clicked)
+    private void ControlsButtonClicked(NavigationSubmitEvent clicked)
     {
         _currentScreenIndex = 2;
         if (_settingsManager != null)
@@ -315,8 +431,8 @@ public class PauseMenu : MonoBehaviour
     /// <summary>
     /// Invoked when main menu button is pressed to load that scene
     /// </summary>
-    /// <param name="click">ClickEvent from button</param>
-    private void ExitToMenu(ClickEvent click)
+    /// <param name="click">NavigationSubmitEvent from button</param>
+    private void ExitToMenu(NavigationSubmitEvent click)
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
@@ -390,4 +506,16 @@ public class PauseMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("MusicVolume", newVolume);
     }
     #endregion
+
+    /// <summary>
+    /// Moves the sliders more smoothly when using a controller
+    /// </summary>
+    /// <param name="selectedSlider">Slider to move</param>
+    /// <param name="direction">Direction to move the slider</param>
+    private void UpdateSliderWithEvent(Slider selectedSlider, NavigationMoveEvent.Direction direction)
+    {
+        float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
+            direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
+        selectedSlider.value += 2.5f * multiplier;
+    }
 }
