@@ -125,6 +125,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlaystationDetection"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""dde37f02-6f01-40d1-a3d6-115f472edb42"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""XboxDetection"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""b5aa2b2f-8dee-4696-88f4-a47049f7b132"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -400,6 +418,50 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ControllerDetection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""df67ba74-c5f2-4ec8-b9c2-5cfa614459dc"",
+                    ""path"": ""<DualShockGamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlaystationDetection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""401bba02-72cf-49c8-a6b5-a71ce91d5c13"",
+                    ""path"": ""<DualShockGamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlaystationDetection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a69220cc-2e70-425a-ba28-abade5d655e3"",
+                    ""path"": ""<XInputController>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""XboxDetection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""59ba79f8-f3b3-4fa8-a0a3-56f29a5addae"",
+                    ""path"": ""<XInputController>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""XboxDetection"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -999,6 +1061,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_BasicControls_StartGame = m_BasicControls.FindAction("StartGame", throwIfNotFound: true);
         m_BasicControls_QuitGame = m_BasicControls.FindAction("QuitGame", throwIfNotFound: true);
         m_BasicControls_ControllerDetection = m_BasicControls.FindAction("ControllerDetection", throwIfNotFound: true);
+        m_BasicControls_PlaystationDetection = m_BasicControls.FindAction("PlaystationDetection", throwIfNotFound: true);
+        m_BasicControls_XboxDetection = m_BasicControls.FindAction("XboxDetection", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1085,6 +1149,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_BasicControls_StartGame;
     private readonly InputAction m_BasicControls_QuitGame;
     private readonly InputAction m_BasicControls_ControllerDetection;
+    private readonly InputAction m_BasicControls_PlaystationDetection;
+    private readonly InputAction m_BasicControls_XboxDetection;
     public struct BasicControlsActions
     {
         private @PlayerControls m_Wrapper;
@@ -1100,6 +1166,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @StartGame => m_Wrapper.m_BasicControls_StartGame;
         public InputAction @QuitGame => m_Wrapper.m_BasicControls_QuitGame;
         public InputAction @ControllerDetection => m_Wrapper.m_BasicControls_ControllerDetection;
+        public InputAction @PlaystationDetection => m_Wrapper.m_BasicControls_PlaystationDetection;
+        public InputAction @XboxDetection => m_Wrapper.m_BasicControls_XboxDetection;
         public InputActionMap Get() { return m_Wrapper.m_BasicControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1142,6 +1210,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ControllerDetection.started += instance.OnControllerDetection;
             @ControllerDetection.performed += instance.OnControllerDetection;
             @ControllerDetection.canceled += instance.OnControllerDetection;
+            @PlaystationDetection.started += instance.OnPlaystationDetection;
+            @PlaystationDetection.performed += instance.OnPlaystationDetection;
+            @PlaystationDetection.canceled += instance.OnPlaystationDetection;
+            @XboxDetection.started += instance.OnXboxDetection;
+            @XboxDetection.performed += instance.OnXboxDetection;
+            @XboxDetection.canceled += instance.OnXboxDetection;
         }
 
         private void UnregisterCallbacks(IBasicControlsActions instance)
@@ -1179,6 +1253,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ControllerDetection.started -= instance.OnControllerDetection;
             @ControllerDetection.performed -= instance.OnControllerDetection;
             @ControllerDetection.canceled -= instance.OnControllerDetection;
+            @PlaystationDetection.started -= instance.OnPlaystationDetection;
+            @PlaystationDetection.performed -= instance.OnPlaystationDetection;
+            @PlaystationDetection.canceled -= instance.OnPlaystationDetection;
+            @XboxDetection.started -= instance.OnXboxDetection;
+            @XboxDetection.performed -= instance.OnXboxDetection;
+            @XboxDetection.canceled -= instance.OnXboxDetection;
         }
 
         public void RemoveCallbacks(IBasicControlsActions instance)
@@ -1343,6 +1423,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnStartGame(InputAction.CallbackContext context);
         void OnQuitGame(InputAction.CallbackContext context);
         void OnControllerDetection(InputAction.CallbackContext context);
+        void OnPlaystationDetection(InputAction.CallbackContext context);
+        void OnXboxDetection(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

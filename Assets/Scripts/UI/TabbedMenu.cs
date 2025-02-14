@@ -504,11 +504,14 @@ namespace PlaceboEntertainment.UI
                 {
                     _interactIcon.text = "E";
                 }
-                if (PlayerController.Instance.PlayerControls.BasicControls.ControllerDetection.triggered)
+                if (PlayerController.Instance.PlayerControls.BasicControls.PlaystationDetection.triggered)
                 {
                     _interactIcon.text = "X";
                 }
-                
+                if (PlayerController.Instance.PlayerControls.BasicControls.XboxDetection.triggered)
+                {
+                    _interactIcon.text = "A";
+                }
             }
             interactPromptMenu.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
