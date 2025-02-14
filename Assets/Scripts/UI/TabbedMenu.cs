@@ -114,7 +114,6 @@ namespace PlaceboEntertainment.UI
         private Label _alarmClockMenu, _alarmClockOverlay;
         private bool _hasAppliedLoseStyling, _hasBegunLossTransition;
         private bool _hasCheckedForTimer;
-        private bool _checkForController;
         private VisualElement _fadeOutElement;
         private VisualElement _fishFace;
         private VisualElement _waterFillMeter;
@@ -514,14 +513,6 @@ namespace PlaceboEntertainment.UI
                 }
             }
             interactPromptMenu.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
-        }
-
-        private void ControllerUsed()
-        {
-            if (_checkForController == false)
-            {
-                _checkForController = true;
-            }
         }
         
         /// <summary>
