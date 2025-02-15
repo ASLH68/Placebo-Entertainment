@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Mat_Hider
   m_Shader: {fileID: 4800000, guid: 82881a2d011b0964696411c822cdd00b, type: 3}
-  m_Parent: {fileID: 2100000, guid: 5cdaf298f94c2eb4087804ecdcc48199, type: 2}
+  m_Parent: {fileID: 2100000, guid: 2f9ee1a80920f5e489b160b92b7075b4, type: 2}
   m_ModifiedSerializedProperties: 2
   m_ValidKeywords: []
   m_InvalidKeywords: []
