@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 202491556581185948}
+  - component: {fileID: 7169876123658479179}
   m_Layer: 0
   m_Name: WireSlots
   m_TagString: Untagged
@@ -32,6 +33,19 @@ Transform:
   - {fileID: 5479628649760087686}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7169876123658479179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3410367222980154362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 809c6cb2f8aa0a5498565087bd4db71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screen: {fileID: 2100000, guid: f83630130b1a8f948b9089df257014ab, type: 2}
 --- !u!1 &5107210563072356839
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,6 +58,7 @@ GameObject:
   - component: {fileID: 5116772866989965086}
   - component: {fileID: 2141771457893044244}
   - component: {fileID: 6693390209932457267}
+  - component: {fileID: 1426064982619322090}
   m_Layer: 0
   m_Name: WirePorts
   m_TagString: Untagged
@@ -97,7 +112,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f83630130b1a8f948b9089df257014ab, type: 2}
+  - {fileID: 2100000, guid: 313c6f47aa8f6434c9efed08152e0af9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -141,6 +156,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -4856170095025935235, guid: b509772921ea46044ae1fcec676ec369, type: 3}
+--- !u!114 &1426064982619322090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5107210563072356839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 809c6cb2f8aa0a5498565087bd4db71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screen: {fileID: 2100000, guid: f83630130b1a8f948b9089df257014ab, type: 2}
 --- !u!1001 &2779965627360071346
 PrefabInstance:
   m_ObjectHideFlags: 0

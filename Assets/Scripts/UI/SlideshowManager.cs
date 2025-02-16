@@ -15,6 +15,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
 
 public class SlideshowManager : MonoBehaviour
@@ -25,6 +26,10 @@ public class SlideshowManager : MonoBehaviour
         public VideoClip Footage;
         public EventReference Audio;
     }
+
+    [Header("Demo Build")]
+    [SerializeField] private bool _skipCinematic = false;
+    
     [SerializeField] private bool _isIntroVideoPlayer = false;
 
     [SerializeField] private int _levelSceneBuildIndex;
@@ -35,7 +40,7 @@ public class SlideshowManager : MonoBehaviour
     [SerializeField] private Video _creditsVideo;
     private EventReference _selectedAudio;
     private PlayerControls _playerControls;
-    private InputAction _playPause;
+    private InputAction _skipVideo;
     private UIDocument _slideshowUI;
     private VideoPlayer _slideshowPlayer;
     private bool _wasCreditsShown = false;
@@ -46,12 +51,27 @@ public class SlideshowManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        if (_skipCinematic && _isIntroVideoPlayer)
+        {
+            SceneManager.LoadScene(_levelSceneBuildIndex);
+        }
         _playerControls = new PlayerControls();
         _playerControls.BasicControls.Enable();
-        _playPause = _playerControls.FindAction("PlayPause");
-        // _playPause.performed += ctx => TogglePlayPause();
-        // _playPause.Enable();
-
+        
+        _skipVideo = _playerControls.FindAction("SkipPause");
+        _skipVideo.Enable();
+        
+        // Skip video on hold, pause on press
+        _skipVideo.performed +=
+            ctx =>
+            {
+                if (ctx.interaction is HoldInteraction)
+                    OnSkipVideo();
+                else // Could check for PressInteraction but easier to just assume it's a press.
+                    TogglePlayPause();
+            };
+        
+        
         _slideshowUI = GetComponent<UIDocument>();
         _slideshowPlayer = GetComponent<VideoPlayer>();
 
@@ -78,8 +98,7 @@ public class SlideshowManager : MonoBehaviour
     {
         _slideshowPlayer.loopPointReached -= DonePlaying;
         _slideshowPlayer.prepareCompleted -= PlayVideo;
-
-        _playPause.Disable();
+        
     }
 
     /// <summary>
@@ -87,8 +106,6 @@ public class SlideshowManager : MonoBehaviour
     /// </summary>
     private void DonePlaying(VideoPlayer vp)
     {
-        _slideshowPlayer.Stop();
-
         if (_isIntroVideoPlayer)
         {
             SceneManager.LoadScene(_levelSceneBuildIndex);
@@ -164,5 +181,13 @@ public class SlideshowManager : MonoBehaviour
                 _slideshowPlayer.Play();
             }
         }
+    }
+    
+    /// <summary>
+    /// Skip the video when space is held
+    /// </summary>
+    private void OnSkipVideo()
+    {
+        DonePlaying(_slideshowPlayer);
     }
 }

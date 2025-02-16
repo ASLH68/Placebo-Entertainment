@@ -354,6 +354,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 32900000, guid: 33855853eba4c8945b258fa44b7a1f87, type: 3}
     - target: {fileID: 7853009991006257867, guid: ed3c881ce8c13754f98032f9ea04eb60, type: 3}
+      propertyPath: _levelSceneBuildIndex
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7853009991006257867, guid: ed3c881ce8c13754f98032f9ea04eb60, type: 3}
       propertyPath: _introVideo.Audio.Path
       value: event:/Music/IntroMusic
       objectReference: {fileID: 0}

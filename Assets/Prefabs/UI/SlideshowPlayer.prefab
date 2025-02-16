@@ -72,7 +72,7 @@ VideoPlayer:
   m_DataSource: 0
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
-  m_AudioOutputMode: 2
+  m_AudioOutputMode: 0
   m_TargetAudioSources:
   - {fileID: 0}
   m_DirectAudioVolumes:
@@ -99,7 +99,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96700d04e56508e4b878deb812582391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isIntroVideoPlayer: 0
+  _skipCinematic: 0
+  _isIntroVideoPlayer: 1
   _levelSceneBuildIndex: 2
   _mainMenuBuildIndex: 0
   _introVideo:

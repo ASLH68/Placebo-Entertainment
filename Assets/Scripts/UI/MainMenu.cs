@@ -12,6 +12,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.Users;
 
 public class MainMenu : MonoBehaviour
 {
@@ -78,13 +80,19 @@ public class MainMenu : MonoBehaviour
     private Coroutine _activeCoroutine;
     private bool _canAnimateTabs = true;
 
+    private GameObject _lastFocusedElement;
+    private Button _lastFocusedVisualElement;
+
     // 0 = splash, 1 = main, 2 = settings selection, 3 = settings submenu
     private int _currentScreenIndex = 0;
+
+    private int _currentMenuButtonIndex = 0;
 
     private SaveLoadManager _savingManager;
     private PlayerControls _playerControls;
     private InputAction _startGame;
     private InputAction _backInput;
+    private InputAction _quitInput;
 
     private List<VisualElement> _defaultDraggers;
     private List<VisualElement> _newDraggers = new List<VisualElement>();
@@ -92,6 +100,8 @@ public class MainMenu : MonoBehaviour
     private List<Slider> _sliders = new List<Slider>();
     private EventInstance _mainMenuMusicInstance;
     private SettingsManager _settingsManager;
+
+    private bool _isFocused = false;
     #endregion
 
     #region Initialization
@@ -102,11 +112,14 @@ public class MainMenu : MonoBehaviour
     {
         // Setting up player inputs
         _playerControls = new PlayerControls();
-        _playerControls.BasicControls.Enable();
+        _playerControls.UI.Enable();
         _startGame = _playerControls.FindAction("StartGame");
-        _backInput = _playerControls.FindAction("PauseGame");
+        _backInput = _playerControls.FindAction("Cancel");
+        _playerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
+        _quitInput = _playerControls.FindAction("QuitGame");
         _startGame.performed += ctx => CloseSplashScreen();
         _backInput.performed += ctx => BackButtonClicked();
+        _quitInput.performed += ctx => QuitButtonClicked(null);
 
         // Assigning screen element references
         _splashScreen = _mainMenuDoc.rootVisualElement.Q(SplashScreenName);
@@ -140,15 +153,15 @@ public class MainMenu : MonoBehaviour
         _settingsTab = _mainMenuDoc.rootVisualElement.Q(SettingsTabName);
         _quitTab = _mainMenuDoc.rootVisualElement.Q(QuitTabName);
 
-        // Registering general button ClickEvent callbacks
-        _newGameButton.RegisterCallback<ClickEvent>(NewGameButtonClicked);
-        _settingsButton.RegisterCallback<ClickEvent>(SettingsButtonClicked);
-        _continueButton.RegisterCallback<ClickEvent>(ContinueButtonClicked);
-        _quitButton.RegisterCallback<ClickEvent>(QuitButtonClicked);
-        _confirmNoButton.RegisterCallback<ClickEvent>(ConfirmNoButtonClicked);
-        _confirmYesButton.RegisterCallback<ClickEvent>(StartNewGame);
-        _audioButton.RegisterCallback<ClickEvent>(AudioButtonClicked);
-        _controlsButton.RegisterCallback<ClickEvent>(ControlsButtonClicked);
+        // Registering general button NavigationSubmitEvent callbacks
+        _newGameButton.RegisterCallback<NavigationSubmitEvent>(NewGameButtonClicked);
+        _settingsButton.RegisterCallback<NavigationSubmitEvent>(SettingsButtonClicked);
+        _continueButton.RegisterCallback<NavigationSubmitEvent>(ContinueButtonClicked);
+        _quitButton.RegisterCallback<NavigationSubmitEvent>(QuitButtonClicked);
+        _confirmNoButton.RegisterCallback<NavigationSubmitEvent>(ConfirmNoButtonClicked);
+        _confirmYesButton.RegisterCallback<NavigationSubmitEvent>(StartNewGame);
+        _audioButton.RegisterCallback<NavigationSubmitEvent>(AudioButtonClicked);
+        _controlsButton.RegisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
 
         // Registering callbacks for animated tabs
         _newGameButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_newGameTab, true); });
@@ -158,9 +171,28 @@ public class MainMenu : MonoBehaviour
         _controlsButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_quitTab, true); });
         _controlsButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_quitTab, false); });
 
+        _newGameButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_newGameButton); });
+        _audioButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
+        _controlsButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_controlsButton); });
+        _settingsButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_settingsButton); });
+        _quitButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_quitButton); });
+
+        _newGameButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _audioButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _controlsButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _settingsButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _quitButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+
+        _newGameButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_newGameTab, true); });
+        _newGameButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_newGameTab, false); });
+        _audioButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
+        _audioButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+        _controlsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_quitTab, true); });
+        _controlsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_quitTab, false); });
+
         _mainMenuMusicInstance = AudioManager.PlaySound(mainMenuMusicEvent, Vector3.zero);
         _allButtons = _mainMenuDoc.rootVisualElement.Query<Button>();
-        _allButtons.ForEach(button => button.RegisterCallback<ClickEvent>(PlayConfirmSound));
+        _allButtons.ForEach(button => button.RegisterCallback<NavigationSubmitEvent>(PlayConfirmSound));
         _sliders = _audioScreen.Query<Slider>().ToList();
         FMODUnity.RuntimeManager.StudioSystem.getParameterByName("MasterVolume", out float volume);
         _sliders[0].value = volume;
@@ -171,6 +203,13 @@ public class MainMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.getParameterByName("MusicVolume", out volume);
         _sliders[2].value = volume;
         _sliders[2].RegisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
     /// <summary>
@@ -202,6 +241,16 @@ public class MainMenu : MonoBehaviour
             _settingsButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_settingsTab, false); });
             _quitButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_quitTab, true); });
             _quitButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_quitTab, false); });
+
+            _continueButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
+            _continueButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+
+            _continueButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_continueTab, true); });
+            _continueButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_continueTab, false); });
+            _settingsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
+            _settingsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+            _quitButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_quitTab, true); });
+            _quitButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_quitTab, false); });
         }
         else
         {
@@ -212,6 +261,11 @@ public class MainMenu : MonoBehaviour
             _settingsButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_continueTab, false); });
             _quitButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_settingsTab, true); });
             _quitButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+
+            _settingsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_continueTab, true); });
+            _settingsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_continueTab, false); });
+            _quitButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
+            _quitButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
         }
     }
 
@@ -223,16 +277,17 @@ public class MainMenu : MonoBehaviour
         // Removing player input callbacks
         _startGame.performed -= ctx => CloseSplashScreen();
         _backInput.performed -= ctx => BackButtonClicked();
+        _playerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
 
-        // Unregistering button ClickEvent callbacks
-        _newGameButton.UnregisterCallback<ClickEvent>(NewGameButtonClicked);
-        _continueButton.UnregisterCallback<ClickEvent>(ContinueButtonClicked);
-        _settingsButton.UnregisterCallback<ClickEvent>(SettingsButtonClicked);
-        _quitButton.UnregisterCallback<ClickEvent>(QuitButtonClicked);
-        _confirmNoButton.UnregisterCallback<ClickEvent>(ConfirmNoButtonClicked);
-        _confirmYesButton.UnregisterCallback<ClickEvent>(StartNewGame);
-        _audioButton.UnregisterCallback<ClickEvent>(AudioButtonClicked);
-        _controlsButton.UnregisterCallback<ClickEvent>(ControlsButtonClicked);
+        // Unregistering button NavigationSubmitEvent callbacks
+        _newGameButton.UnregisterCallback<NavigationSubmitEvent>(NewGameButtonClicked);
+        _continueButton.UnregisterCallback<NavigationSubmitEvent>(ContinueButtonClicked);
+        _settingsButton.UnregisterCallback<NavigationSubmitEvent>(SettingsButtonClicked);
+        _quitButton.UnregisterCallback<NavigationSubmitEvent>(QuitButtonClicked);
+        _confirmNoButton.UnregisterCallback<NavigationSubmitEvent>(ConfirmNoButtonClicked);
+        _confirmYesButton.UnregisterCallback<NavigationSubmitEvent>(StartNewGame);
+        _audioButton.UnregisterCallback<NavigationSubmitEvent>(AudioButtonClicked);
+        _controlsButton.UnregisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
         // Unregistering animated tab related callbacks
         _newGameButton.UnregisterCallback<MouseOverEvent>(evt => { AnimateTab(_newGameTab, true); });
         _newGameButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_newGameTab, false); });
@@ -240,6 +295,27 @@ public class MainMenu : MonoBehaviour
         _audioButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_settingsTab, false); });
         _controlsButton.UnregisterCallback<MouseOverEvent>(evt => { AnimateTab(_quitTab, true); });
         _controlsButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_quitTab, false); });
+
+        _newGameButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_newGameButton); });
+        _audioButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
+        _controlsButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_controlsButton); });
+        _settingsButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_settingsButton); });
+        _quitButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_quitButton); });
+        _continueButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
+
+        _newGameButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _audioButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _controlsButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _settingsButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _quitButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _continueButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+
+        _newGameButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_newGameTab, true); });
+        _newGameButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_newGameTab, false); });
+        _audioButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
+        _audioButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+        _controlsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_quitTab, true); });
+        _controlsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_quitTab, false); });
 
         // Unregistering animated tab callbacks dependent on the continue button being present
         if (_savingManager != null && _savingManager.DoesSaveFileExist())
@@ -250,6 +326,13 @@ public class MainMenu : MonoBehaviour
             _settingsButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_settingsTab, false); });
             _quitButton.UnregisterCallback<MouseOverEvent>(evt => { AnimateTab(_quitTab, true); });
             _quitButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_quitTab, false); });
+
+            _continueButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_continueTab, true); });
+            _continueButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_continueTab, false); });
+            _settingsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
+            _settingsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+            _quitButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_quitTab, true); });
+            _quitButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_quitTab, false); });
         }
         else
         {
@@ -257,16 +340,71 @@ public class MainMenu : MonoBehaviour
             _settingsButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_continueTab, false); });
             _quitButton.UnregisterCallback<MouseOverEvent>(evt => { AnimateTab(_settingsTab, true); });
             _quitButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+
+            _settingsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_continueTab, true); });
+            _settingsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_continueTab, false); });
+            _quitButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
+            _quitButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
         }
-        _allButtons.ForEach(button => button.UnregisterCallback<ClickEvent>(PlayConfirmSound));
+        _allButtons.ForEach(button => button.UnregisterCallback<NavigationSubmitEvent>(PlayConfirmSound));
         _sliders[0].UnregisterCallback<ChangeEvent<float>>(MasterAudioSliderChanged);
         _sliders[1].UnregisterCallback<ChangeEvent<float>>(SFXAudioSliderChanged);
         _sliders[2].UnregisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
         AudioManager.StopSound(_mainMenuMusicInstance);
+
+        foreach (var slider in _sliders)
+        {
+            slider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
     #endregion
 
     #region ButtonFunctions
+    /// <summary>
+    /// Called when mouse leaves a button
+    /// </summary>
+    private void ClearButtonFocus()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        _isFocused = false;
+    }
+
+    /// <summary>
+    /// Called when the mouse hovers over a button after using a controller
+    /// to change what button is focused
+    /// </summary>
+    private void ChangeButtonFocus(Button buttonToFocus)
+    {
+        buttonToFocus.Focus();
+        _lastFocusedVisualElement = buttonToFocus;
+    }
+
+    /// <summary>
+    /// When a controller is used and the game isn't focused on something,
+    /// focus on a button
+    /// </summary>
+    private void ControllerUsed()
+    {
+        if (_isFocused) { return; }
+
+        _isFocused = true;
+
+        if (_lastFocusedVisualElement != null)
+        {
+            _lastFocusedVisualElement.Focus();
+        }
+        else if (_currentScreenIndex == 0)
+        {
+            _newGameButton.Focus();
+        }
+        else if (_currentScreenIndex == 1)
+        {
+            _audioButton.Focus();
+        }
+    }
+
     /// <summary>
     /// Closes the splash screen when enter is pressed
     /// </summary>
@@ -278,6 +416,7 @@ public class MainMenu : MonoBehaviour
             _startGame.performed -= ctx => CloseSplashScreen();
             _splashScreen.style.display = DisplayStyle.None;
             _mainMenuScreen.style.display = DisplayStyle.Flex;
+            _newGameButton.Focus();
         }
     }
 
@@ -285,76 +424,89 @@ public class MainMenu : MonoBehaviour
     /// Loads intro cutscene
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void ContinueButtonClicked(ClickEvent clicked)
+    private void ContinueButtonClicked(NavigationSubmitEvent clicked)
     {
-        SceneManager.LoadScene(_gameSceneVideoIndex);
+        if (_currentScreenIndex == 1)
+            SceneManager.LoadScene(_gameSceneVideoIndex);
     }
 
     /// <summary>
     /// Opens settings selection menu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void SettingsButtonClicked(ClickEvent clicked)
+    private void SettingsButtonClicked(NavigationSubmitEvent clicked)
     {
-        _currentScreenIndex = 2;
-        _mainButtonHolder.style.display = DisplayStyle.None;
-        _settingsSelectionHolder.style.display = DisplayStyle.Flex;
-        _settingsBackPrompt.style.display = DisplayStyle.Flex;
+        if (_currentScreenIndex == 1)
+        {
+            _currentScreenIndex = 2;
+            _mainButtonHolder.style.display = DisplayStyle.None;
+            _settingsSelectionHolder.style.display = DisplayStyle.Flex;
+            _settingsBackPrompt.style.display = DisplayStyle.Flex;
+        }
     }
 
     /// <summary>
     /// Opens audio options submenu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void AudioButtonClicked(ClickEvent clicked)
+    private void AudioButtonClicked(NavigationSubmitEvent clicked)
     {
-        _currentScreenIndex = 3;
-        if (_settingsManager != null)
+        if (_currentScreenIndex == 2)
         {
-            _masterVolSlider.value = _settingsManager.MasterVolume;
-            _musicVolSlider.value = _settingsManager.MusicVolume;
-            _sfxVolSlider.value = _settingsManager.SfxVolume;
+            _currentScreenIndex = 3;
+            if (_settingsManager != null)
+            {
+                _masterVolSlider.value = _settingsManager.MasterVolume;
+                _musicVolSlider.value = _settingsManager.MusicVolume;
+                _sfxVolSlider.value = _settingsManager.SfxVolume;
+            }
+            _settingsSelectionHolder.style.display = DisplayStyle.None;
+            _settingsBackPrompt.style.display = DisplayStyle.None;
+            _audioScreen.style.display = DisplayStyle.Flex;
         }
-        _settingsSelectionHolder.style.display = DisplayStyle.None;
-        _settingsBackPrompt.style.display = DisplayStyle.None;
-        _audioScreen.style.display = DisplayStyle.Flex;
     }
 
     /// <summary>
     /// Opens controls options submenu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void ControlsButtonClicked(ClickEvent clicked)
+    private void ControlsButtonClicked(NavigationSubmitEvent clicked)
     {
-        _currentScreenIndex = 3;
-        if (_settingsManager != null)
+        if (_currentScreenIndex == 2)
         {
-            _mouseSensSlider.value = _settingsManager.MouseSensitivity;
+            _currentScreenIndex = 3;
+            if (_settingsManager != null)
+            {
+                _mouseSensSlider.value = _settingsManager.MouseSensitivity;
+            }
+            _settingsSelectionHolder.style.display = DisplayStyle.None;
+            _settingsBackPrompt.style.display = DisplayStyle.None;
+            _controlsScreen.style.display = DisplayStyle.Flex;
         }
-        _settingsSelectionHolder.style.display = DisplayStyle.None;
-        _settingsBackPrompt.style.display = DisplayStyle.None;
-        _controlsScreen.style.display = DisplayStyle.Flex;
     }
 
     /// <summary>
     /// Pulls up confirmation UI
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void NewGameButtonClicked(ClickEvent clicked)
+    private void NewGameButtonClicked(NavigationSubmitEvent clicked)
     {
-        AnimateTab(_newGameTab, true, true);
-        _canAnimateTabs = false;
+        if (_currentScreenIndex == 1)
+        {
+            AnimateTab(_newGameTab, true, true);
+            _canAnimateTabs = false;
 
-        _continueButton.SetEnabled(false);
-        _settingsButton.SetEnabled(false);
-        _quitButton.SetEnabled(false);
+            _continueButton.SetEnabled(false);
+            _settingsButton.SetEnabled(false);
+            _quitButton.SetEnabled(false);
+        }
     }
 
     /// <summary>
     /// Deletes existing save data and loads the intro scene
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void StartNewGame(ClickEvent clicked)
+    private void StartNewGame(NavigationSubmitEvent clicked)
     {
         if (_savingManager != null)
         {
@@ -368,7 +520,7 @@ public class MainMenu : MonoBehaviour
     /// Pulls up new game confirmation options
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void ConfirmNoButtonClicked(ClickEvent clicked)
+    private void ConfirmNoButtonClicked(NavigationSubmitEvent clicked)
     {
         _canAnimateTabs = true;
         AnimateTab(_newGameTab, false);
@@ -386,9 +538,10 @@ public class MainMenu : MonoBehaviour
     /// Closes application
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void QuitButtonClicked(ClickEvent clicked)
+    private void QuitButtonClicked(NavigationSubmitEvent clicked)
     {
-        Application.Quit();
+        if (_currentScreenIndex == 1)
+            Application.Quit();
     }
 
     /// <summary>
@@ -428,6 +581,8 @@ public class MainMenu : MonoBehaviour
     /// <param name="extendNGButton">Normally false, true when extending new game tab out for confirmation</param>
     private void AnimateTab(VisualElement tabToAnimate, bool isActive, bool extendNGButton = false)
     {
+        Debug.Log("Tab to animate: " + tabToAnimate.name);
+
         if (_canAnimateTabs)
         {
             if (_activeCoroutine != null && !isActive)
@@ -481,7 +636,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    private void PlayConfirmSound(ClickEvent evt)
+    private void PlayConfirmSound(NavigationSubmitEvent evt)
     {
         AudioManager.PlaySound(clickEvent, transform.position);
     }
@@ -507,4 +662,16 @@ public class MainMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("MusicVolume", newVolume);
     }
     #endregion
+
+    /// <summary>
+    /// Moves the sliders more smoothly when using a controller
+    /// </summary>
+    /// <param name="selectedSlider">Slider to move</param>
+    /// <param name="direction">Direction to move the slider</param>
+    private void UpdateSliderWithEvent(Slider selectedSlider, NavigationMoveEvent.Direction direction)
+    {
+        float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
+            direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
+        selectedSlider.value += 2.5f * multiplier;
+    }
 }
