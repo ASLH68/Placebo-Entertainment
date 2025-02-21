@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9067245161808725952
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PCClay 1
+  m_Shader: {fileID: -6465566751694194690, guid: ebfb38158be9cfb4f9292ee6c5f43dea, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _SampleTexture2D_072fba435896410b8425d4494259fee5_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 827735fb2d43f904787de49d5267b602, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_12cf0d3fd41a4a07a3500655bf5a9e9c_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 9a6936434f80c234a8a4b0abf85aa00a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_360d7025d042491184354827bd90ddcc_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 64685fcddbc58804ebc1e823d9c25b4b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_3d8996f3b9734d82b6a2f032ebe000c9_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 4e928ea272cf4934cb4665e539910160, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_43b9ffee5a174ae2a0b82d69d02ef010_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d8afcd310bbaab243a952c7c1156c692, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_bac48a8c96ed403187e6760267fa4186_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 6aa48a634c36b104b8dbc27520afd6b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_d27a5bef12c44f0385ef7f2f345512ef_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7effdae1425981949a8fb17e542ffe56, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_fa5cf024dc7d47b490e37a97bc1ac62e_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 81b61810f7991d445847e6c092631a51, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AO_Depth: 1
+    - _Dimple_Displace_Intensity: 5
+    - _Dimple_Normal_Intensity: 1
+    - _Dimple_Tiling: 30
+    - _FPS: 4
+    - _Fingerprint_Intensity: 1
+    - _Fingerprint_Tiling: 1
+    - _Macro_Noise_Contrast: 1
+    - _Macro_Noise_Scale: 10
+    - _Macro_Noise_Strength: 0.1
+    - _Main_Texture_Tiling: 2
+    - _Normal_Strength: 1
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _Roughness_Intensity: 1.75
+    - _Subsurface_Radius: 1
+    m_Colors:
+    - _Base_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Subsurface_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []

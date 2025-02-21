@@ -98,10 +98,10 @@ namespace PlaceboEntertainment.UI
         #endregion
 
         #region Private
-
         private VisualElement _tabMenuRoot;
         private VisualElement _playerObject;
         private Label _interactText;
+        private Label _interactIcon;
         private VisualElement _scheduleContainer;
         private VisualElement _dialogueButtonContainer;
         private VisualElement _dialogueBanner;
@@ -124,6 +124,7 @@ namespace PlaceboEntertainment.UI
         #region Constants
 
         private const string TalkPromptName = "TextPrompt";
+        private const string TalkIconName = "Button";
         private const string TabClassName = "tab";
         private const string SelectedTabClassName = "currentlySelectedTab";
         private const string UnSelectedTabClassName = "currentlyUnSelectedTab";
@@ -183,6 +184,7 @@ namespace PlaceboEntertainment.UI
             _tabMenuRoot = tabMenu.rootVisualElement;
             _playerObject = _tabMenuRoot.Q(PlayerName);
             _interactText = interactPromptMenu.rootVisualElement.Q<Label>(TalkPromptName);
+            _interactIcon = interactPromptMenu.rootVisualElement.Q<Label>(TalkIconName);
             _scheduleContainer = _tabMenuRoot.Q(ScheduleContainerName);
             _dialogueButtonContainer = dialogueMenu.rootVisualElement.Q(DialogueOptionContainerName);
             _dialogueBanner = dialogueMenu.rootVisualElement.Q(DialogueBannerName);
@@ -497,11 +499,22 @@ namespace PlaceboEntertainment.UI
             if (show)
             {
                 _interactText.text = text;
+                if (PlayerController.Instance.PlayerControls.BasicControls.Move.triggered)
+                {
+                    _interactIcon.text = "E";
+                }
+                if (PlayerController.Instance.PlayerControls.BasicControls.PlaystationDetection.triggered)
+                {
+                    _interactIcon.text = "X";
+                }
+                if (PlayerController.Instance.PlayerControls.BasicControls.XboxDetection.triggered)
+                {
+                    _interactIcon.text = "A";
+                }
             }
-
             interactPromptMenu.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
-
+        
         /// <summary>
         /// Enables or disables the schedule updated notification.
         /// </summary>
