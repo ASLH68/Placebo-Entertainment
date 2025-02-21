@@ -123,52 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &13604766
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 13604768}
-  - component: {fileID: 13604767}
-  m_Layer: 0
-  m_Name: BurstCollisionWorld
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &13604767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 13604766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1a161c4294214a4fbcb7e9e94800494, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cellSpans:
-    m_AlignBytes: 16
---- !u!4 &13604768
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 13604766}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &20608499
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +159,7 @@ MonoBehaviour:
   - {fileID: 2045353127}
   - {fileID: 2045353126}
   - {fileID: 2045353125}
-  screenToChange: {fileID: 0}
+  screenToChange: {fileID: 2045353128}
   fixedScreenMaterial: {fileID: 2100000, guid: f83630130b1a8f948b9089df257014ab, type: 2}
 --- !u!114 &20608501
 MonoBehaviour:
@@ -1756,6 +1710,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5053328850166941045, guid: ddee0cac0f4d6434e8ddb6fe20e9623b, type: 3}
   m_PrefabInstance: {fileID: 1845416992}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1871549311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1871549313}
+  - component: {fileID: 1871549312}
+  m_Layer: 0
+  m_Name: BurstCollisionWorld
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1871549312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871549311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a161c4294214a4fbcb7e9e94800494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellSpans:
+    m_AlignBytes: 16
+--- !u!4 &1871549313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871549311}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1949336407
 GameObject:
   m_ObjectHideFlags: 0
@@ -2061,6 +2061,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b25abd2c34201f49afd4ea3477bf3f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!23 &2045353128 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2141771457893044244, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+  m_PrefabInstance: {fileID: 2045353124}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2047722029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2142,6 +2147,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpdatedWire
       objectReference: {fileID: 0}
+    - target: {fileID: 1949521362628541522, guid: 72380e88db794ef4baecbf8f72bf09ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 69.977
+      objectReference: {fileID: 0}
     - target: {fileID: 2988337365763162430, guid: 72380e88db794ef4baecbf8f72bf09ef, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.392173
@@ -2205,6 +2214,6 @@ SceneRoots:
   - {fileID: 860289386}
   - {fileID: 271968207935524085}
   - {fileID: 20608502}
-  - {fileID: 13604768}
   - {fileID: 869052181}
   - {fileID: 550948898}
+  - {fileID: 1871549313}
