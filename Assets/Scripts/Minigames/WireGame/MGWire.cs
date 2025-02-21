@@ -40,10 +40,16 @@ public class MGWire : MonoBehaviour
 
     [SerializeField] private GameObject _wireJack;
 
+    [SerializeField] float _totalWeight = 10f;
+
+    [SerializeField] float _drag = 1f;
+    [SerializeField] float _angularDrag = 1f;
+
+    [SerializeField] bool _usePhysics = false;
+
     private bool _canConnectToSlot = false;
 
     private MGWireSlot _currentSlot = null;
-    private MGWireMovement _mgWireMovement;
     private bool _isCorrectlySlotted = false;
 
     private bool _isInteracting = false;
@@ -59,16 +65,17 @@ public class MGWire : MonoBehaviour
 
     private void Start()
     {
-        if (TryGetComponent<MGWireMovement>(out MGWireMovement wireMove))
-        {
-            _mgWireMovement = wireMove;
-        }
-
         if (_wireJack != null)
             _wireJack.GetComponent<Renderer>().material = GetJackColor();
 
         _tabbedMenu = TabbedMenu.Instance;
         _cameraTrans = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+
+        Rigidbody rb = _wireJack.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.mass = _totalWeight;
+        rb.drag = _drag;
+        rb.angularDrag = _angularDrag;
     }
 
     /// <summary>
@@ -159,7 +166,7 @@ public class MGWire : MonoBehaviour
     private void OnInteract()
     {
         _isInteracting = true;
-        _mgWireMovement.ChangeEndKinematic(true);
+        ChangeEndKinematic(true);
     }
 
     /// <summary>
@@ -169,7 +176,7 @@ public class MGWire : MonoBehaviour
     private void OnDrop()
     {
         _isInteracting = false;
-        _mgWireMovement.ChangeEndKinematic(true);
+        ChangeEndKinematic(true);
 
         PlaceWire();
     }
@@ -219,8 +226,14 @@ public class MGWire : MonoBehaviour
         }
         else if (!_canConnectToSlot)
         {
-            _mgWireMovement.ChangeEndKinematic(false);
+            ChangeEndKinematic(false);
         }
+    }
+
+    public void ChangeEndKinematic(bool isKine)
+    {
+        Rigidbody rb = _wireJack.GetComponent<Rigidbody>();
+        rb.isKinematic = isKine;
     }
 
     /// <summary>
