@@ -57,8 +57,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - FogDensity: 0.075
-    - FogNoise: 80.7
+    - FogDensity: 0.557
+    - FogNoise: 10
     - FogSpeed: 0.01
     - _AddPrecomputedVelocity: 0
     - _AlphaCutoffEnable: 0
@@ -113,7 +113,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
-    - FogColor: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
+    - FogColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _FogColor: {r: 0.84298223, g: 2.828427, b: 1.5972295, a: 1}
