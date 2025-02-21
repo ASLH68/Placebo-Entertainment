@@ -80,10 +80,10 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Roughness_Intensity: 1.75
-    - _Subsurface_Radius: 0.2
+    - _Subsurface_Radius: 500
     m_Colors:
     - _Base_Color: {r: 0.43137258, g: 0.32156864, b: 0.43137258, a: 1}
-    - _Subsurface_Color: {r: 0.3679245, g: 0, b: 0.3679245, a: 1}
+    - _Subsurface_Color: {r: 0.11320752, g: 0.060341742, b: 0.11320752, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &87484518105624666
 MonoBehaviour:
