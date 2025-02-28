@@ -11,15 +11,7 @@ using UnityEngine;
 
 public class WireInteraction : MonoBehaviour, IInteractable
 {
-    private MGWire _wire;
-
-    /// <summary>
-    /// Assigning MGWire reference
-    /// </summary>
-    private void Awake()
-    {
-        _wire = GetComponentInParent<MGWire>();
-    }
+    [SerializeField] private MGWire _wire;
 
     public void DisplayInteractUI()
     {
