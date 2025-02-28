@@ -58,6 +58,8 @@ public class MGWire : MonoBehaviour
     private TabbedMenu _tabbedMenu;
     private bool _minigameStarted = false;
 
+    private Rigidbody _jackRb;
+
     public enum EWireID
     {
         ONE, TWO, THREE, FOUR
@@ -71,11 +73,11 @@ public class MGWire : MonoBehaviour
         _tabbedMenu = TabbedMenu.Instance;
         _cameraTrans = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
 
-        Rigidbody rb = _wireJack.GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-        rb.mass = _totalWeight;
-        rb.drag = _drag;
-        rb.angularDrag = _angularDrag;
+        _jackRb = _wireJack.GetComponent<Rigidbody>();
+        _jackRb.isKinematic = false;
+        _jackRb.mass = _totalWeight;
+        _jackRb.drag = _drag;
+        _jackRb.angularDrag = _angularDrag;
     }
 
     /// <summary>
@@ -166,7 +168,28 @@ public class MGWire : MonoBehaviour
     private void OnInteract()
     {
         _isInteracting = true;
-        ChangeEndKinematic(true);
+        _jackRb.isKinematic = true;
+        _jackRb.freezeRotation = true;
+        StartCoroutine(RotateJack());
+    }
+
+    /// <summary>
+    /// Rotates the jack when the player picks it up
+    /// </summary>
+    /// <returns>Waits a fraction of a second</returns>
+    IEnumerator RotateJack()
+    {
+        float lerpValue = 0;
+        float newRotation;
+
+        while (lerpValue < 1)
+        {
+            newRotation = Mathf.Lerp(transform.rotation.z, 90f, lerpValue);
+            _jackRb.transform.eulerAngles = new Vector3(0, 0, newRotation);
+            lerpValue += 0.01f;
+
+            yield return new WaitForSeconds(0.01f);
+        }
     }
 
     /// <summary>
@@ -176,7 +199,9 @@ public class MGWire : MonoBehaviour
     private void OnDrop()
     {
         _isInteracting = false;
-        ChangeEndKinematic(true);
+        _jackRb.isKinematic = true;
+        _jackRb.freezeRotation = false;
+        StopAllCoroutines();
 
         PlaceWire();
     }
@@ -226,46 +251,8 @@ public class MGWire : MonoBehaviour
         }
         else if (!_canConnectToSlot)
         {
-            ChangeEndKinematic(false);
+            _jackRb.isKinematic = false;
         }
-    }
-
-    public void ChangeEndKinematic(bool isKine)
-    {
-        Rigidbody rb = _wireJack.GetComponent<Rigidbody>();
-        rb.isKinematic = isKine;
-    }
-
-    /// <summary>
-    /// Creates a sphere on a segment to visualize the wire. This is temporary
-    /// until we have art assets
-    /// </summary>
-    /// <param name="parentObj">parent for the sphere</param>
-    /// <param name="isEndSegment">defaulted to false, true if this is 
-    /// the last segment so it knows to set it to a unique color.</param>
-    public void CreateSegmentStruct(Transform parentObj, bool isEndSegment = false)
-    {
-    //    GameObject segment;
-    //    if (isEndSegment)
-    //    {
-    //        segment = Instantiate(_avcJack);
-    //        segment.GetComponent<Renderer>().material = GetJackColor();
-    //    }
-    //    else
-    //    {
-    //        segment = Instantiate(_avcCable);
-    //    }
-
-    //    /*GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-    //    Destroy(sphere.GetComponent<Collider>());*/
-
-    //    //Destroy(segment.GetComponent<Collider>());
-
-    //    segment.gameObject.transform.parent = parentObj;
-    //    segment.gameObject.transform.position = parentObj.position;
-
-    //    // Did this used to have the collider form?
     }
 
     /// <summary>
