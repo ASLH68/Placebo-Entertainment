@@ -66,13 +66,13 @@ MonoBehaviour:
       _NPCToAlert: 6
   - timerName: FireFailTimer
     timer:
-      _maxTime: 210
+      _maxTime: 270
       _isRunning: 1
       _eventTimerCalls: {fileID: 11400000, guid: 3ecd2838e2ea86b42a087aad7f6a97a6, type: 2}
       _NPCToAlert: 7
   - timerName: 30SecondsFirePlusDelay
     timer:
-      _maxTime: 180
+      _maxTime: 240
       _isRunning: 1
       _eventTimerCalls: {fileID: 11400000, guid: 718aa8d808aa79a40abc3266d2f16f80, type: 2}
       _NPCToAlert: 7
