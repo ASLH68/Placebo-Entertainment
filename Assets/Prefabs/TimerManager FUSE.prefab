@@ -58,7 +58,7 @@ MonoBehaviour:
       _isRunning: 1
       _eventTimerCalls: {fileID: 11400000, guid: 718aa8d808aa79a40abc3266d2f16f80, type: 2}
       _NPCToAlert: 6
-  - timerName: RobotReset
+  - timerName: GeneratorExplodeTimer
     timer:
       _maxTime: 110
       _isRunning: 1
@@ -127,7 +127,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: RobotReset
+            m_StringArgument: GeneratorExplodeTimer
             m_BoolArgument: 0
           m_CallState: 2
   - _npcEvent: {fileID: 11400000, guid: fc8258980d4d13341abe42a88ac6fdb6, type: 2}
