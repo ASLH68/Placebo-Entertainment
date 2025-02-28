@@ -16,6 +16,7 @@ using UnityEngine.UIElements;
 using Cursor = UnityEngine.Cursor;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 namespace PlaceboEntertainment.UI
 {
@@ -118,6 +119,9 @@ namespace PlaceboEntertainment.UI
         private VisualElement _fishFace;
         private VisualElement _waterFillMeter;
         private bool _isLoseScreenActive = false;
+        private bool _isFocused = false;
+        private GameObject _lastFocusedElement;
+        private Button _lastFocusedVisualElement;
 
         #endregion
 
@@ -223,6 +227,8 @@ namespace PlaceboEntertainment.UI
         /// </summary>
         private void Start()
         {
+            PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
+
 #if UNITY_EDITOR
             PlayerController.Instance.PlayerControls.BasicControls.OpenSchedule.performed += OpenScheduleOnPerformed;
 #endif
@@ -233,6 +239,7 @@ namespace PlaceboEntertainment.UI
         /// </summary>
         private void OnDisable()
         {
+            PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
             UnRegisterTabCallbacks();
 #if UNITY_EDITOR
             PlayerController.Instance.PlayerControls.BasicControls.OpenSchedule.performed -= OpenScheduleOnPerformed;
@@ -527,6 +534,43 @@ namespace PlaceboEntertainment.UI
 
         #endregion
 
+        #region ButtonFocusFunctions
+        /// <summary>
+        /// Called when mouse leaves a button
+        /// </summary>
+        private void ClearButtonFocus()
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            _isFocused = false;
+        }
+
+        /// <summary>
+        /// Called when the mouse hovers over a button after using a controller
+        /// to change what button is focused
+        /// </summary>
+        private void ChangeButtonFocus(Button buttonToFocus)
+        {
+            buttonToFocus.Focus();
+            _lastFocusedVisualElement = buttonToFocus;
+        }
+
+        /// <summary>
+        /// When a controller is used and the game isn't focused on something,
+        /// focus on a button
+        /// </summary>
+        private void ControllerUsed()
+        {
+            if (_isFocused) { return; }
+
+            _isFocused = true;
+
+            if (_lastFocusedVisualElement != null)
+            {
+                _lastFocusedVisualElement.Focus();
+            }
+        }
+        #endregion
+
         #region Dialogue
 
         /// <summary>
@@ -578,7 +622,8 @@ namespace PlaceboEntertainment.UI
             // newButton.AddManipulator(new Clickable(click));
             newButton.RegisterCallback<NavigationSubmitEvent>(evt => click?.Invoke());
             newButton.RegisterCallback<NavigationSubmitEvent>(evt => AudioManager.PlaySoundUnManaged(clickEvent));
-            newButton.RegisterCallback<MouseOverEvent>(evt => newButton.Focus());
+            newButton.RegisterCallback<MouseOverEvent>(evt => ChangeButtonFocus(newButton));
+            newButton.RegisterCallback<MouseOutEvent>(evt => ClearButtonFocus());
             _dialogueButtonContainer.Add(newButton);
         }
 
