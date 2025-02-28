@@ -500,7 +500,7 @@ MonoBehaviour:
   tearResistanceMultiplier: 1000
   tearRate: 1
   _distanceConstraintsEnabled: 1
-  _stretchingScale: 1.6
+  _stretchingScale: 1.2
   _stretchCompliance: 0
   _maxCompression: 0
   _bendConstraintsEnabled: 1
