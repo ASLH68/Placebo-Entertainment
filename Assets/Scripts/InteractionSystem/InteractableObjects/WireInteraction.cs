@@ -13,14 +13,6 @@ public class WireInteraction : MonoBehaviour, IInteractable
 {
     [SerializeField] private MGWire _wire;
 
-    /// <summary>
-    /// Assigning MGWire reference
-    /// </summary>
-    //private void Awake()
-    //{
-    //    _wire = GetComponentInParent<MGWire>();
-    //}
-
     public void DisplayInteractUI()
     {
         _wire.DisplayInteractUI();
