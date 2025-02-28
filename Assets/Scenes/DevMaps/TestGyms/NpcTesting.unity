@@ -622,6 +622,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: TabbedMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 4422286474446707533, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
+      propertyPath: _psControlUI.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4422286474446707533, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
+      propertyPath: _psControlUI.Array.data[0]
+      value: 
+      objectReference: {fileID: 2800000, guid: 186c32f4f86985940b55f941b864f3f7, type: 3}
+    - target: {fileID: 4422286474446707533, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
+      propertyPath: _psControllerUI.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4422286474446707533, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
+      propertyPath: _xboxControllerUI.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4422286474446707533, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
+      propertyPath: _psControllerUI.Array.data[0]
+      value: 
+      objectReference: {fileID: 2800000, guid: 186c32f4f86985940b55f941b864f3f7, type: 3}
+    - target: {fileID: 4422286474446707533, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
+      propertyPath: _xboxControllerUI.Array.data[0]
+      value: 
+      objectReference: {fileID: 2800000, guid: eeafc4917e82b114ca92b2cb75ba9335, type: 3}
     - target: {fileID: 5028407268189074725, guid: 2fcbfa8208ca5c54fa83f3a5c518bb3d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
