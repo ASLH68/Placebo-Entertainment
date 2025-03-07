@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerControls = new PlayerControls();
         PlayerControls.BasicControls.Enable();
+        PlayerControls.UI.Enable();
 
         InteractionCheck = new PlayerInteractSystem("Default None");
         _doOnce = true;

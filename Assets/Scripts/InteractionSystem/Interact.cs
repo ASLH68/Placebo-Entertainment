@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using PlaceboEntertainment.UI;
 
 public class Interact : MonoBehaviour
 {
@@ -50,7 +51,7 @@ public class Interact : MonoBehaviour
     /// </summary>
     private void InteractPressed(InputAction.CallbackContext ctx)
     {
-        if(_interactable != null)
+        if(_interactable != null && !TabbedMenu.Instance.DialogueVisible)
         {
             _interactable.Interact(gameObject);
         }

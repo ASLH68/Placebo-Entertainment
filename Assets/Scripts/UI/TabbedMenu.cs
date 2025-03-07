@@ -120,7 +120,6 @@ namespace PlaceboEntertainment.UI
         private VisualElement _waterFillMeter;
         private bool _isLoseScreenActive = false;
         private bool _isFocused = false;
-        private GameObject _lastFocusedElement;
         private Button _lastFocusedVisualElement;
 
         #endregion
@@ -228,7 +227,6 @@ namespace PlaceboEntertainment.UI
         private void Start()
         {
             PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
-
 #if UNITY_EDITOR
             PlayerController.Instance.PlayerControls.BasicControls.OpenSchedule.performed += OpenScheduleOnPerformed;
 #endif
@@ -632,6 +630,7 @@ namespace PlaceboEntertainment.UI
         /// </summary>
         public void ClearDialogueOptions()
         {
+            _lastFocusedVisualElement = null;
             dialogueMenu.rootVisualElement.Query(DialogueOptionName)
                 .ForEach(option => { option.parent.Remove(option); });
         }
