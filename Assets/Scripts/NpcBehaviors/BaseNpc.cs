@@ -179,8 +179,6 @@ public abstract class BaseNpc : MonoBehaviour
     /// shouldn't be negative</param>
     public virtual void Interact(int responseIndex = 0)
     {
-        Debug.Log("response chosen: " + responseIndex);
-
         int newNodeIndex = 0;
 
         // First interaction
