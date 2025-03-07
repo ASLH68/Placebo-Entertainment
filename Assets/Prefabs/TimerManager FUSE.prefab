@@ -48,19 +48,19 @@ MonoBehaviour:
   _timers:
   - timerName: RobotDeathTimer
     timer:
-      _maxTime: 70
+      _maxTime: 80
       _isRunning: 1
       _eventTimerCalls: {fileID: 11400000, guid: fc8258980d4d13341abe42a88ac6fdb6, type: 2}
       _NPCToAlert: 5
   - timerName: 30SecondsRobotPlusDelay
     timer:
-      _maxTime: 80
+      _maxTime: 50
       _isRunning: 1
       _eventTimerCalls: {fileID: 11400000, guid: 718aa8d808aa79a40abc3266d2f16f80, type: 2}
       _NPCToAlert: 6
   - timerName: GeneratorExplodeTimer
     timer:
-      _maxTime: 110
+      _maxTime: 81
       _isRunning: 1
       _eventTimerCalls: {fileID: 11400000, guid: 3ecd2838e2ea86b42a087aad7f6a97a6, type: 2}
       _NPCToAlert: 6
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventsToListenFor:
-  - _npcEvent: {fileID: 11400000, guid: fc8258980d4d13341abe42a88ac6fdb6, type: 2}
+  - _npcEvent: {fileID: 11400000, guid: a27013fe86c89d74f8695e9ed8cb9f73, type: 2}
     _npcEventTag: 5
     _onEventTriggered:
       m_PersistentCalls:
