@@ -504,17 +504,22 @@ namespace PlaceboEntertainment.UI
             if (show)
             {
                 _interactText.text = text;
+                //PC UI override
                 if (PlayerController.Instance.PlayerControls.BasicControls.Move.triggered)
                 {
                     _interactIcon.text = "E";
                 }
+                //PlayStation UI override
                 if (PlayerController.Instance.PlayerControls.BasicControls.PlaystationDetection.triggered)
                 {
-                    _interactIcon.text = "X";
+                    _interactIcon.text = "";
+                    _interactIcon.style.backgroundImage = PlayerController.Instance._psControllerUI[0];
                 }
+                //Xbox UI override
                 if (PlayerController.Instance.PlayerControls.BasicControls.XboxDetection.triggered)
                 {
-                    _interactIcon.text = "A";
+                    _interactIcon.text = "";
+                    _interactIcon.style.backgroundImage = PlayerController.Instance._xboxControllerUI[0];
                 }
             }
             interactPromptMenu.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;

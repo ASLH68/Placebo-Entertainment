@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private ParticleSystem _footPrints;
     private ParticleSystem.EmissionModule _footPrintEmission;
 
+    [SerializeField] public Texture2D[] _psControllerUI;
+    [SerializeField] public Texture2D[] _xboxControllerUI;
+    
     //Anim Controller
     public static Animator Animator { get; private set; }
 
