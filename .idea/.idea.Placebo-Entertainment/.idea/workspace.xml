@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="0ca99064-d62d-4298-bd79-b6c397975cbd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Placebo-Entertainment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Placebo-Entertainment/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerControls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerControls.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerControls.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerControls.inputactions" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Fullplayer.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Fullplayer.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/DevMaps/TestGyms/NpcTesting.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/DevMaps/TestGyms/NpcTesting.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/MainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/PauseMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/PauseMenu.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/TabbedMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/TabbedMenu.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -129,6 +132,7 @@
       <workItem from="1738351454662" duration="3474000" />
       <workItem from="1739560474389" duration="1097000" />
       <workItem from="1739562179039" duration="191000" />
+      <workItem from="1740771377680" duration="5252000" />
     </task>
     <servers />
   </component>
