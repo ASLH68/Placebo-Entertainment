@@ -14,6 +14,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.Users;
+using UnityEngine.InputSystem.Utilities;
 
 public class MainMenu : MonoBehaviour
 {
@@ -49,6 +50,10 @@ public class MainMenu : MonoBehaviour
     private const string MasterSliderName = "MasterSlider";
     private const string MusicSliderName = "MusicSlider";
     private const string SfxSliderName = "SFXSlider";
+    private const string AudioBackPrompt = "AudioBackInput";
+    private const string ControlsBackPrompt = "ControlsBackInput";
+    private const string SelectionBackPrompt = "SelectionBackInput";
+    private const string MenuEnterPrompt = "EnterInput";
     #endregion
 
     #region Private
@@ -76,6 +81,10 @@ public class MainMenu : MonoBehaviour
     private Slider _masterVolSlider;
     private Slider _musicVolSlider;
     private Slider _sfxVolSlider;
+    private Label _audioBackPrompt;
+    private Label _controlsBackPrompt;
+    private Label _selectionBackPrompt;
+    private Label _gameStartPrompt;
 
     private Coroutine _activeCoroutine;
     private bool _canAnimateTabs = true;
@@ -129,6 +138,10 @@ public class MainMenu : MonoBehaviour
         _settingsBackPrompt = _mainMenuDoc.rootVisualElement.Q(SettingsBackPromptName);
         _controlsScreen = _mainMenuDoc.rootVisualElement.Q(ControlsScreenName);
         _audioScreen = _mainMenuDoc.rootVisualElement.Q(AudioScreenName);
+        _audioBackPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(AudioBackPrompt);
+        _controlsBackPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(ControlsBackPrompt);
+        _selectionBackPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(SelectionBackPrompt);
+        _gameStartPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(MenuEnterPrompt);
 
         // Assigning button related references
         _newGameButton = _mainMenuDoc.rootVisualElement.Q<Button>(NewGameButtonName);
@@ -673,5 +686,10 @@ public class MainMenu : MonoBehaviour
         float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
             direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
         selectedSlider.value += 2.5f * multiplier;
+    }
+
+    private void UpdateInputPrompts(InputControl inputControl)
+    {
+        
     }
 }
