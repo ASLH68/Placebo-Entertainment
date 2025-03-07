@@ -134,6 +134,8 @@ public class Pickupable : MonoBehaviour, IInteractable
     /// <param name="player">The player interacting</param>
     public void Interact(GameObject player)
     {
+        if (this == null) { return; }
+
         if(_isInteractive)
         {
             AudioManager.PlaySoundUnManaged(pickupEvent, gameObject);
