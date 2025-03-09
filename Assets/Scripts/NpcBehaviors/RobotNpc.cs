@@ -23,6 +23,8 @@ public class RobotNpc : BaseNpc
     
     [SerializeField] private FMODUnity.EventReference lightBulbEvent;
     [SerializeField] private FMODUnity.EventReference deathEvent;
+
+    [SerializeField] private NpcEvent _giveRobotLightbulb;
     /// <summary>
     /// Subscribing to wire game won event on initialization
     /// </summary>
@@ -135,6 +137,7 @@ public class RobotNpc : BaseNpc
             _animator.SetTrigger("Lightbulb");
             AudioManager.PlaySound(lightBulbEvent, transform.position);
             _lightbulbMesh.SetActive(true);
+            _giveRobotLightbulb.TriggerEvent(NpcEventTags.Robot);
             return option.NextResponseIndex[0];
         }
         // Trying to repair robot without the lightbulb
