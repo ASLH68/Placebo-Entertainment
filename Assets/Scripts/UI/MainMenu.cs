@@ -15,6 +15,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.Users;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.InputSystem.Switch;
 
 public class MainMenu : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private EventReference mainMenuMusicEvent;
     [SerializeField] private EventReference clickEvent;
     [SerializeField] private int _gameSceneVideoIndex = 2;
+    [SerializeField] private Texture2D _controllerStart;
+    [SerializeField] private Texture2D _xboxBack;
+    [SerializeField] private Texture2D _psBack;
 
     #region Constants
     private const string NewGameButtonName = "NewGameButton";
@@ -111,6 +115,8 @@ public class MainMenu : MonoBehaviour
     private SettingsManager _settingsManager;
 
     private bool _isFocused = false;
+    // 0 = MnK, 1 = Xbox, 2 = PS 
+    private int _inputDeviceType = 0;
     #endregion
 
     #region Initialization
@@ -129,6 +135,11 @@ public class MainMenu : MonoBehaviour
         _startGame.performed += ctx => CloseSplashScreen();
         _backInput.performed += ctx => BackButtonClicked();
         _quitInput.performed += ctx => QuitButtonClicked(null);
+
+        // New input detection
+        _playerControls.UI.ControllerDetection.performed += DetectInputType;
+        _playerControls.UI.Point.performed += DetectInputType;
+        _playerControls.UI.Navigate.performed += DetectInputType;
 
         // Assigning screen element references
         _splashScreen = _mainMenuDoc.rootVisualElement.Q(SplashScreenName);
@@ -291,6 +302,9 @@ public class MainMenu : MonoBehaviour
         _startGame.performed -= ctx => CloseSplashScreen();
         _backInput.performed -= ctx => BackButtonClicked();
         _playerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
+        _playerControls.UI.ControllerDetection.performed -= DetectInputType;
+        _playerControls.UI.Point.performed -= DetectInputType;
+        _playerControls.UI.Navigate.performed -= DetectInputType;
 
         // Unregistering button NavigationSubmitEvent callbacks
         _newGameButton.UnregisterCallback<NavigationSubmitEvent>(NewGameButtonClicked);
@@ -688,8 +702,51 @@ public class MainMenu : MonoBehaviour
         selectedSlider.value += 2.5f * multiplier;
     }
 
-    private void UpdateInputPrompts(InputControl inputControl)
+    /// <summary>
+    /// Called to determine what type of input device is being used
+    /// </summary>
+    /// <param name="context">Input context</param>
+    private void DetectInputType(InputAction.CallbackContext context)
     {
-        
+        string controlName = context.control.device.displayName.ToLower();
+        int newInputDevice;
+
+        if (controlName.Contains("xbox"))
+        {
+            newInputDevice = 1;
+        }
+        else if (controlName.Contains("playstation") || 
+            controlName.Contains("dualsense") || controlName.Contains("dualshock"))
+        {
+            newInputDevice = 2;
+        }
+        else
+        {
+            newInputDevice = 0;
+        }
+
+        if (newInputDevice == _inputDeviceType) { return; }
+
+        _inputDeviceType = newInputDevice;
+        UpdateInputPrompts();
+    }
+
+    /// <summary>
+    /// Changes input prompts when the device type changes
+    /// </summary>
+    private void UpdateInputPrompts()
+    {
+        _audioBackPrompt.text = _inputDeviceType == 0 ? "Esc" : "";
+        _controlsBackPrompt.text = _inputDeviceType == 0 ? "Esc" : "";
+        _selectionBackPrompt.text = _inputDeviceType == 0 ? "Esc" : "";
+        _gameStartPrompt.text = _inputDeviceType == 0 ? "Enter" : "";
+
+        _gameStartPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : _controllerStart;
+        _audioBackPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : 
+            _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controlsBackPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : 
+            _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _selectionBackPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : 
+            _inputDeviceType == 1 ? _xboxBack : _psBack;
     }
 }

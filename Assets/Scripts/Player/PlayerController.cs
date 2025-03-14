@@ -18,6 +18,7 @@ using Utils;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
+    [SerializeField] bool _isOnMainMenu = false;
     [SerializeField] float _moveSpeed;
     [SerializeField] float _jumpForce;
     [Header("Audio")]
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] public Texture2D[] _psControllerUI;
     [SerializeField] public Texture2D[] _xboxControllerUI;
-    
+
     //Anim Controller
     public static Animator Animator { get; private set; }
 

@@ -1046,7 +1046,46 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""Playstation"",
+            ""bindingGroup"": ""Playstation"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<DualShockGamepad>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""XBox"",
+            ""bindingGroup"": ""XBox"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<XInputController>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""MouseAndKeyboard"",
+            ""bindingGroup"": ""MouseAndKeyboard"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
         // BasicControls
         m_BasicControls = asset.FindActionMap("BasicControls", throwIfNotFound: true);
@@ -1410,6 +1449,33 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+    private int m_PlaystationSchemeIndex = -1;
+    public InputControlScheme PlaystationScheme
+    {
+        get
+        {
+            if (m_PlaystationSchemeIndex == -1) m_PlaystationSchemeIndex = asset.FindControlSchemeIndex("Playstation");
+            return asset.controlSchemes[m_PlaystationSchemeIndex];
+        }
+    }
+    private int m_XBoxSchemeIndex = -1;
+    public InputControlScheme XBoxScheme
+    {
+        get
+        {
+            if (m_XBoxSchemeIndex == -1) m_XBoxSchemeIndex = asset.FindControlSchemeIndex("XBox");
+            return asset.controlSchemes[m_XBoxSchemeIndex];
+        }
+    }
+    private int m_MouseAndKeyboardSchemeIndex = -1;
+    public InputControlScheme MouseAndKeyboardScheme
+    {
+        get
+        {
+            if (m_MouseAndKeyboardSchemeIndex == -1) m_MouseAndKeyboardSchemeIndex = asset.FindControlSchemeIndex("MouseAndKeyboard");
+            return asset.controlSchemes[m_MouseAndKeyboardSchemeIndex];
+        }
+    }
     public interface IBasicControlsActions
     {
         void OnMove(InputAction.CallbackContext context);
