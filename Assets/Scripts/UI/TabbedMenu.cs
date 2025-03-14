@@ -16,6 +16,7 @@ using UnityEngine.UIElements;
 using Cursor = UnityEngine.Cursor;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 namespace PlaceboEntertainment.UI
 {
@@ -98,10 +99,10 @@ namespace PlaceboEntertainment.UI
         #endregion
 
         #region Private
-
         private VisualElement _tabMenuRoot;
         private VisualElement _playerObject;
         private Label _interactText;
+        private Label _interactIcon;
         private VisualElement _scheduleContainer;
         private VisualElement _dialogueButtonContainer;
         private VisualElement _dialogueBanner;
@@ -118,12 +119,15 @@ namespace PlaceboEntertainment.UI
         private VisualElement _fishFace;
         private VisualElement _waterFillMeter;
         private bool _isLoseScreenActive = false;
+        private bool _isFocused = false;
+        private Button _lastFocusedVisualElement;
 
         #endregion
 
         #region Constants
 
         private const string TalkPromptName = "TextPrompt";
+        private const string TalkIconName = "Button";
         private const string TabClassName = "tab";
         private const string SelectedTabClassName = "currentlySelectedTab";
         private const string UnSelectedTabClassName = "currentlyUnSelectedTab";
@@ -183,6 +187,7 @@ namespace PlaceboEntertainment.UI
             _tabMenuRoot = tabMenu.rootVisualElement;
             _playerObject = _tabMenuRoot.Q(PlayerName);
             _interactText = interactPromptMenu.rootVisualElement.Q<Label>(TalkPromptName);
+            _interactIcon = interactPromptMenu.rootVisualElement.Q<Label>(TalkIconName);
             _scheduleContainer = _tabMenuRoot.Q(ScheduleContainerName);
             _dialogueButtonContainer = dialogueMenu.rootVisualElement.Q(DialogueOptionContainerName);
             _dialogueBanner = dialogueMenu.rootVisualElement.Q(DialogueBannerName);
@@ -221,6 +226,7 @@ namespace PlaceboEntertainment.UI
         /// </summary>
         private void Start()
         {
+            PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
 #if UNITY_EDITOR
             PlayerController.Instance.PlayerControls.BasicControls.OpenSchedule.performed += OpenScheduleOnPerformed;
 #endif
@@ -231,6 +237,7 @@ namespace PlaceboEntertainment.UI
         /// </summary>
         private void OnDisable()
         {
+            PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
             UnRegisterTabCallbacks();
 #if UNITY_EDITOR
             PlayerController.Instance.PlayerControls.BasicControls.OpenSchedule.performed -= OpenScheduleOnPerformed;
@@ -497,11 +504,27 @@ namespace PlaceboEntertainment.UI
             if (show)
             {
                 _interactText.text = text;
+                //PC UI override
+                if (PlayerController.Instance.PlayerControls.BasicControls.Move.triggered)
+                {
+                    _interactIcon.text = "E";
+                }
+                //PlayStation UI override
+                if (PlayerController.Instance.PlayerControls.BasicControls.PlaystationDetection.triggered)
+                {
+                    _interactIcon.text = "";
+                    _interactIcon.style.backgroundImage = PlayerController.Instance._psControllerUI[0];
+                }
+                //Xbox UI override
+                if (PlayerController.Instance.PlayerControls.BasicControls.XboxDetection.triggered)
+                {
+                    _interactIcon.text = "";
+                    _interactIcon.style.backgroundImage = PlayerController.Instance._xboxControllerUI[0];
+                }
             }
-
             interactPromptMenu.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
-
+        
         /// <summary>
         /// Enables or disables the schedule updated notification.
         /// </summary>
@@ -512,6 +535,43 @@ namespace PlaceboEntertainment.UI
             notificationPopupMenu.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
+        #endregion
+
+        #region ButtonFocusFunctions
+        /// <summary>
+        /// Called when mouse leaves a button
+        /// </summary>
+        private void ClearButtonFocus()
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            _isFocused = false;
+        }
+
+        /// <summary>
+        /// Called when the mouse hovers over a button after using a controller
+        /// to change what button is focused
+        /// </summary>
+        private void ChangeButtonFocus(Button buttonToFocus)
+        {
+            buttonToFocus.Focus();
+            _lastFocusedVisualElement = buttonToFocus;
+        }
+
+        /// <summary>
+        /// When a controller is used and the game isn't focused on something,
+        /// focus on a button
+        /// </summary>
+        private void ControllerUsed()
+        {
+            if (_isFocused) { return; }
+
+            _isFocused = true;
+
+            if (_lastFocusedVisualElement != null)
+            {
+                _lastFocusedVisualElement.Focus();
+            }
+        }
         #endregion
 
         #region Dialogue
@@ -565,7 +625,8 @@ namespace PlaceboEntertainment.UI
             // newButton.AddManipulator(new Clickable(click));
             newButton.RegisterCallback<NavigationSubmitEvent>(evt => click?.Invoke());
             newButton.RegisterCallback<NavigationSubmitEvent>(evt => AudioManager.PlaySoundUnManaged(clickEvent));
-            newButton.RegisterCallback<MouseOverEvent>(evt => newButton.Focus());
+            newButton.RegisterCallback<MouseOverEvent>(evt => ChangeButtonFocus(newButton));
+            newButton.RegisterCallback<MouseOutEvent>(evt => ClearButtonFocus());
             _dialogueButtonContainer.Add(newButton);
         }
 
@@ -574,6 +635,7 @@ namespace PlaceboEntertainment.UI
         /// </summary>
         public void ClearDialogueOptions()
         {
+            _lastFocusedVisualElement = null;
             dialogueMenu.rootVisualElement.Query(DialogueOptionName)
                 .ForEach(option => { option.parent.Remove(option); });
         }

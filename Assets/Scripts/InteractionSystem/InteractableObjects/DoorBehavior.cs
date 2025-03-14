@@ -26,6 +26,10 @@ public class DoorBehavior : MonoBehaviour, IInteractable
     private Color _color;
     private float _intensity;
 
+    [Header("Fuse Hotfix")] 
+    [SerializeField] private NpcEvent _fuseEndOfGame;
+    [SerializeField] private bool _inFuse;
+
     void Start()
     {
         _anim = GetComponent<Animator>();
@@ -42,6 +46,10 @@ public class DoorBehavior : MonoBehaviour, IInteractable
         if (!_isLocked)
         {
             OpenDoor();
+            if (_inFuse)
+            {
+                _fuseEndOfGame.TriggerEvent(NpcEventTags.Game);
+            }
         }
     }
 

@@ -39,11 +39,13 @@ public class PauseMenu : MonoBehaviour
     private const string TopTabName = "TopTab";
     private const string MiddleTabName = "MiddleTab";
     private const string BottomTabName = "BottomTab";
+    private const string EscapeButtonName = "Button";
     #endregion
 
     #region Private
     private TabbedMenu _tabbedMenu;
     private Button _continueButton;
+    private Label _escapeButton;
     private Button _settingsButton;
     private Button _exitButton;
     private Button _audioButton;
@@ -87,6 +89,7 @@ public class PauseMenu : MonoBehaviour
         _exitButton = _pauseMenu.rootVisualElement.Q<Button>(ExitButtonName);
         _audioButton = _pauseMenu.rootVisualElement.Q<Button>(AudioButtonName);
         _controlsButton = _pauseMenu.rootVisualElement.Q<Button>(ControlsButtonName);
+        _escapeButton = _pauseMenu.rootVisualElement.Q<Label>(EscapeButtonName);
 
         // Getting references to screen holders
         _pauseHolder = _pauseMenu.rootVisualElement.Q(PauseHolderName);
@@ -166,6 +169,13 @@ public class PauseMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.getParameterByName("MusicVolume", out volume);
         _sliders[2].value = volume;
         _sliders[2].RegisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
     private void PlayConfirmSound(NavigationSubmitEvent evt)
@@ -206,6 +216,7 @@ public class PauseMenu : MonoBehaviour
         _controlsButton.UnregisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
         _exitButton.UnregisterCallback<NavigationSubmitEvent>(ExitToMenu);
         _exitButton.UnregisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
+        
 
         _continueButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
         _audioButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
@@ -251,6 +262,13 @@ public class PauseMenu : MonoBehaviour
         _sliders[0].UnregisterCallback<ChangeEvent<float>>(MasterAudioSliderChanged);
         _sliders[1].UnregisterCallback<ChangeEvent<float>>(SFXAudioSliderChanged);
         _sliders[2].UnregisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
     /// <summary>
@@ -262,7 +280,26 @@ public class PauseMenu : MonoBehaviour
         _isGamePaused = isActive;
 
         if (isActive)
+        {
             _continueButton.Focus();
+            //PC UI override
+            if (PlayerController.Instance.PlayerControls.BasicControls.Look.triggered)
+            {
+                _escapeButton.text = "Esc";
+            }
+            //PlayStation UI override
+            if (PlayerController.Instance.PlayerControls.BasicControls.PlaystationDetection.triggered)
+            {
+                _escapeButton.text = "";
+                _escapeButton.style.backgroundImage = PlayerController.Instance._psControllerUI[1];
+            }
+            //Xbox UI override
+            if (PlayerController.Instance.PlayerControls.BasicControls.XboxDetection.triggered)
+            {
+                _escapeButton.text = "";
+                _escapeButton.style.backgroundImage = PlayerController.Instance._xboxControllerUI[1];
+            }
+        }
         
         // Ensures mouse is still visible when pausing during dialogue
         if (_tabbedMenu != null && _tabbedMenu.DialogueVisible)
@@ -492,4 +529,16 @@ public class PauseMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("MusicVolume", newVolume);
     }
     #endregion
+
+    /// <summary>
+    /// Moves the sliders more smoothly when using a controller
+    /// </summary>
+    /// <param name="selectedSlider">Slider to move</param>
+    /// <param name="direction">Direction to move the slider</param>
+    private void UpdateSliderWithEvent(Slider selectedSlider, NavigationMoveEvent.Direction direction)
+    {
+        float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
+            direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
+        selectedSlider.value += 2.5f * multiplier;
+    }
 }

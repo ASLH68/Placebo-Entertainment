@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8363901018563324463}
   - component: {fileID: 8988970857005786147}
   - component: {fileID: 7371263332850259969}
-  - component: {fileID: 5521085707878843928}
   m_Layer: 0
   m_Name: TimerManager
   m_TagString: Untagged
@@ -195,16 +194,3 @@ MonoBehaviour:
             m_StringArgument: 30SecondsShipPlusDelay
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &5521085707878843928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3197978693663432061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a0acc881a336094997b0fb61c6d1983, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _eventsToListenFor: []

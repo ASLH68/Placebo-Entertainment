@@ -203,6 +203,13 @@ public class MainMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.getParameterByName("MusicVolume", out volume);
         _sliders[2].value = volume;
         _sliders[2].RegisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
     /// <summary>
@@ -344,6 +351,13 @@ public class MainMenu : MonoBehaviour
         _sliders[1].UnregisterCallback<ChangeEvent<float>>(SFXAudioSliderChanged);
         _sliders[2].UnregisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
         AudioManager.StopSound(_mainMenuMusicInstance);
+
+        foreach (var slider in _sliders)
+        {
+            slider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
     #endregion
 
@@ -648,4 +662,16 @@ public class MainMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("MusicVolume", newVolume);
     }
     #endregion
+
+    /// <summary>
+    /// Moves the sliders more smoothly when using a controller
+    /// </summary>
+    /// <param name="selectedSlider">Slider to move</param>
+    /// <param name="direction">Direction to move the slider</param>
+    private void UpdateSliderWithEvent(Slider selectedSlider, NavigationMoveEvent.Direction direction)
+    {
+        float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
+            direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
+        selectedSlider.value += 2.5f * multiplier;
+    }
 }

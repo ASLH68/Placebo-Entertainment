@@ -19,11 +19,11 @@ public class FireBehavior : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private int _waterCooldown;
-    [SerializeField] private float _timeBetweenScaleChanges;
+    private float _timeBetweenScaleChanges = 0.01f;
 
     [Range(0f,50f)]
     [Tooltip("How much the fire changes size each time it grows or shrinks")]
-    [SerializeField] private float _absoluteScaleChange;
+    private float _absoluteScaleChange = 0.01f;
 
     [Range(0f, 2f)]
     [Tooltip("Minimum size the fire can start at.")]

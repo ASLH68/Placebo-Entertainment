@@ -357,6 +357,12 @@ MonoBehaviour:
       Data4: 842183475
     Path: event:/Characters/Player/Footsteps
   _footPrints: {fileID: 1044532239908415153}
+  _psControllerUI:
+  - {fileID: 2800000, guid: 186c32f4f86985940b55f941b864f3f7, type: 3}
+  - {fileID: 2800000, guid: 5f94cc31ec401304ebed7fd3649a45e3, type: 3}
+  _xboxControllerUI:
+  - {fileID: 2800000, guid: eeafc4917e82b114ca92b2cb75ba9335, type: 3}
+  - {fileID: 2800000, guid: 0c95a9b8ca343d34aa0ddc4195f75524, type: 3}
   Move:
     m_Name: Move
     m_Type: 0
@@ -993,7 +999,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 0
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 0
   m_DefaultBlend:
     m_Style: 1
