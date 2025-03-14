@@ -207,6 +207,7 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         PlayerController.Instance.PlayerControls.BasicControls.PauseGame.performed += PauseGamePerformed;
+        PlayerController.Instance.PlayerControls.UI.Cancel.performed += ctx => PerformBackInput();
         _tabbedMenu = TabbedMenu.Instance;
         PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
 
@@ -230,6 +231,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        PlayerController.Instance.PlayerControls.UI.Cancel.performed -= ctx => PerformBackInput();
         PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
         PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= DetectInputType;
         PlayerController.Instance.PlayerControls.UI.Point.performed -= DetectInputType;
@@ -360,8 +362,17 @@ public class PauseMenu : MonoBehaviour
         {
             TogglePauseMenu(false);
         }
+        // Return to previous pause screen from a settings screen
+        else
+        {
+            PerformBackInput();
+        }
+    }
+    
+    private void PerformBackInput()
+    {
         // Return to main pause screen from settings selection
-        else if (_currentScreenIndex == 1)
+        if (_currentScreenIndex == 1)
         {
             _currentScreenIndex = 0;
             _selectionHolder.style.display = DisplayStyle.None;
