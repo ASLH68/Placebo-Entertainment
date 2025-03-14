@@ -1093,7 +1093,7 @@ MonoBehaviour:
       Data3: -1435403370
       Data4: 204840968
     Path: event:/Minigame/Angel/Button
-  _arrowDirection: 0
+  _arrowDirection: 1
 --- !u!1 &6158352218305937239 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8098247122061628494, guid: 7c5e2dcce1deeae41bf6e34246ec58e8, type: 3}

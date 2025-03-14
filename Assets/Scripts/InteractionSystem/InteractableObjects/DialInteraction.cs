@@ -71,7 +71,7 @@ public class DialInteraction : MonoBehaviour, IInteractable
         if (_direction != DialDirection.Up)
         {
             int difference = 4 - (int) _direction;
-            transform.Rotate(new Vector3(0, 90 * difference, 0));
+            transform.Rotate(new Vector3(-90 * difference, 0, 0));
             _direction = DialDirection.Up;
         }
     }
