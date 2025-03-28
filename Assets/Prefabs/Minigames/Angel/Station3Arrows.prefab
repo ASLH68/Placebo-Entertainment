@@ -1205,7 +1205,7 @@ MonoBehaviour:
       Data4: -1279290902
     Path: event:/Minigame/Angel/Lever
   _handle: {fileID: 7182517924704595777}
-  _station: {fileID: 0}
+  _station: {fileID: 8658900178086347288}
 --- !u!65 &6116015882995854381
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1102,13 +1102,13 @@ MonoBehaviour:
   _interactPromptText: LEVER
   leverEvent:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 2104462760
+      Data2: 1260496103
+      Data3: -304394855
+      Data4: -1279290902
+    Path: event:/Minigame/Angel/Lever
   _handle: {fileID: 9205306463062580748}
-  _station: {fileID: 0}
+  _station: {fileID: 1123335423732067928}
 --- !u!65 &5497846685055861550
 BoxCollider:
   m_ObjectHideFlags: 0
