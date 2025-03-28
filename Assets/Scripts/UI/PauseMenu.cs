@@ -673,6 +673,5 @@ public class PauseMenu : MonoBehaviour
         _controllerAudioBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
         _controllerControlsBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
         _controllerSettingsBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
-        _controllerPauseBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
     }
 }
