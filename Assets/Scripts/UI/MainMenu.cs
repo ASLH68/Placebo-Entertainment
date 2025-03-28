@@ -54,10 +54,17 @@ public class MainMenu : MonoBehaviour
     private const string MasterSliderName = "MasterSlider";
     private const string MusicSliderName = "MusicSlider";
     private const string SfxSliderName = "SFXSlider";
-    private const string AudioBackPrompt = "AudioBackInput";
-    private const string ControlsBackPrompt = "ControlsBackInput";
-    private const string SelectionBackPrompt = "SelectionBackInput";
-    private const string MenuEnterPrompt = "EnterInput";
+    private const string AudioBackPrompt = "AudioBackPrompt";
+    private const string ControlsBackPrompt = "ControlsBackPrompt";
+    private const string MenuEnterPrompt = "EnterPrompt";
+    private const string ControllerAudioBackPrompt = "AudioBackPromptController";
+    private const string ControllerControlsBackPrompt = "ControlsBackPromptController";
+    private const string ControllerSelectionBackPrompt = "SelectionBackPromptController";
+    private const string ControllerMenuPrompt = "EnterPromptController";
+    private const string ControllerAudioInput = "AudioBackInputController";
+    private const string ControllerControlsInput = "ControlsBackInputController";
+    private const string ControllerSelectionInput = "SelectionBackInputController";
+    private const string ControllerMenuEnterInput = "EnterInputController";
     #endregion
 
     #region Private
@@ -85,10 +92,17 @@ public class MainMenu : MonoBehaviour
     private Slider _masterVolSlider;
     private Slider _musicVolSlider;
     private Slider _sfxVolSlider;
-    private Label _audioBackPrompt;
-    private Label _controlsBackPrompt;
-    private Label _selectionBackPrompt;
-    private Label _gameStartPrompt;
+    private VisualElement _audioBackPrompt;
+    private VisualElement _controlsBackPrompt;
+    private VisualElement _gameStartPrompt;
+    private VisualElement _controllerAudioBackPrompt;
+    private VisualElement _controllerControlsBackPrompt;
+    private VisualElement _controllerSelectionBackPrompt;
+    private VisualElement _controllerGameStartPrompt;
+    private Label _controllerEnterInput;
+    private Label _controllerControlsInput;
+    private Label _controllerAudioInput;
+    private Label _controllerSelectionInput;
 
     private Coroutine _activeCoroutine;
     private bool _canAnimateTabs = true;
@@ -149,13 +163,20 @@ public class MainMenu : MonoBehaviour
         _settingsBackPrompt = _mainMenuDoc.rootVisualElement.Q(SettingsBackPromptName);
         _controlsScreen = _mainMenuDoc.rootVisualElement.Q(ControlsScreenName);
         _audioScreen = _mainMenuDoc.rootVisualElement.Q(AudioScreenName);
-        _audioBackPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(AudioBackPrompt);
-        _controlsBackPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(ControlsBackPrompt);
-        _selectionBackPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(SelectionBackPrompt);
-        _gameStartPrompt = _mainMenuDoc.rootVisualElement.Q<Label>(MenuEnterPrompt);
+        _audioBackPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(AudioBackPrompt);
+        _controlsBackPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(ControlsBackPrompt);
+        _gameStartPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(MenuEnterPrompt);
+        _controllerAudioBackPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(ControllerAudioBackPrompt);
+        _controllerControlsBackPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(ControllerControlsBackPrompt);
+        _controllerSelectionBackPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(ControllerSelectionBackPrompt);
+        _controllerGameStartPrompt = _mainMenuDoc.rootVisualElement.Q<VisualElement>(ControllerMenuPrompt);
+        _controllerEnterInput = _mainMenuDoc.rootVisualElement.Q<Label>(ControllerMenuEnterInput);
+        _controllerControlsInput = _mainMenuDoc.rootVisualElement.Q<Label>(ControllerControlsInput);
+        _controllerAudioInput = _mainMenuDoc.rootVisualElement.Q<Label>(ControllerAudioInput);
+        _controllerSelectionInput = _mainMenuDoc.rootVisualElement.Q<Label>(ControllerSelectionInput);
 
-        // Assigning button related references
-        _newGameButton = _mainMenuDoc.rootVisualElement.Q<Button>(NewGameButtonName);
+    // Assigning button related references
+    _newGameButton = _mainMenuDoc.rootVisualElement.Q<Button>(NewGameButtonName);
         _settingsButton = _mainMenuDoc.rootVisualElement.Q<Button>(SettingsButtonName);
         _continueButton = _mainMenuDoc.rootVisualElement.Q<Button>(ContinueButtonName);
         _quitButton = _mainMenuDoc.rootVisualElement.Q<Button>(QuitButtonName);
@@ -468,7 +489,7 @@ public class MainMenu : MonoBehaviour
             _currentScreenIndex = 2;
             _mainButtonHolder.style.display = DisplayStyle.None;
             _settingsSelectionHolder.style.display = DisplayStyle.Flex;
-            _settingsBackPrompt.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
     }
 
@@ -489,7 +510,9 @@ public class MainMenu : MonoBehaviour
             }
             _settingsSelectionHolder.style.display = DisplayStyle.None;
             _settingsBackPrompt.style.display = DisplayStyle.None;
+            _controllerSelectionBackPrompt.style.display = DisplayStyle.None;
             _audioScreen.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
     }
 
@@ -508,7 +531,9 @@ public class MainMenu : MonoBehaviour
             }
             _settingsSelectionHolder.style.display = DisplayStyle.None;
             _settingsBackPrompt.style.display = DisplayStyle.None;
+            _controllerSelectionBackPrompt.style.display = DisplayStyle.None;
             _controlsScreen.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
     }
 
@@ -581,6 +606,7 @@ public class MainMenu : MonoBehaviour
             _currentScreenIndex = 1;
             _settingsSelectionHolder.style.display = DisplayStyle.None;
             _settingsBackPrompt.style.display = DisplayStyle.None;
+            _controllerSelectionBackPrompt.style.display = DisplayStyle.None;
             _mainButtonHolder.style.display = DisplayStyle.Flex;
         }
         else if (_currentScreenIndex == 3)
@@ -594,7 +620,7 @@ public class MainMenu : MonoBehaviour
             _controlsScreen.style.display = DisplayStyle.None;
             _audioScreen.style.display = DisplayStyle.None;
             _settingsSelectionHolder.style.display = DisplayStyle.Flex;
-            _settingsBackPrompt.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
     }
     #endregion
@@ -736,17 +762,35 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     private void UpdateInputPrompts()
     {
-        _audioBackPrompt.text = _inputDeviceType == 0 ? "Esc" : "";
-        _controlsBackPrompt.text = _inputDeviceType == 0 ? "Esc" : "";
-        _selectionBackPrompt.text = _inputDeviceType == 0 ? "Esc" : "";
-        _gameStartPrompt.text = _inputDeviceType == 0 ? "Enter" : "";
+        if (_currentScreenIndex == 0)
+        {
+            _gameStartPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerGameStartPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        else if (_currentScreenIndex == 2)
+        {
+            _settingsBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerSelectionBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        else if (_currentScreenIndex == 3)
+        {
+            _audioBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controlsBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
 
-        _gameStartPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : _controllerStart;
-        _audioBackPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : 
-            _inputDeviceType == 1 ? _xboxBack : _psBack;
-        _controlsBackPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : 
-            _inputDeviceType == 1 ? _xboxBack : _psBack;
-        _selectionBackPrompt.style.backgroundImage = _inputDeviceType == 0 ? null : 
-            _inputDeviceType == 1 ? _xboxBack : _psBack;
+            _controllerAudioBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerControlsBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        if ( _inputDeviceType == 0 )
+        {
+            UnityEngine.Cursor.visible = true;
+            return; 
+        }
+
+        UnityEngine.Cursor.visible = false;
+
+        _controllerAudioInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerControlsInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerSelectionInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
     }
 }
