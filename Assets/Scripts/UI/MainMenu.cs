@@ -19,6 +19,7 @@ using UnityEngine.InputSystem.Switch;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private bool _isFuseBuild;
     [SerializeField] private UIDocument _mainMenuDoc;
     [SerializeField] private int _introVideoBuildIndex;
     [SerializeField] private float _tabAnimationTime;
@@ -311,6 +312,11 @@ public class MainMenu : MonoBehaviour
             _settingsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_continueTab, false); });
             _quitButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_settingsTab, true); });
             _quitButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_settingsTab, false); });
+        }
+
+        if (_isFuseBuild)
+        {
+            _continueButton.style.display = DisplayStyle.None;
         }
     }
 
