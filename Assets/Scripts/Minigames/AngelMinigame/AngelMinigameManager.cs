@@ -71,6 +71,11 @@ public class AngelMinigameManager : MonoBehaviour
             structCopy.StationBehavior = _stations[i].StationConsole.GetComponent<StationBehavior>();
             _stations[i] = structCopy;
         }
+
+        foreach (var VARIABLE in _stations)
+        {
+            Debug.Log(VARIABLE.StationBehavior);
+        }
     }
 
     /// <summary>
@@ -267,6 +272,7 @@ public class AngelMinigameManager : MonoBehaviour
         //enables next spotlight
         if(_stationCount < _stations.Count)
         {
+            
             _stations[_stationCount].StationBehavior.SetSpotlight(true);
         }
     }
