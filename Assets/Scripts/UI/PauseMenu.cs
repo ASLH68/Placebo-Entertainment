@@ -21,6 +21,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private UIDocument _pauseMenu;
     [SerializeField] private float _tabAnimationTime = 0.25f;
     [SerializeField] private EventReference confirmEvent;
+    [SerializeField] private Texture2D _xboxBack;
+    [SerializeField] private Texture2D _psBack;
 
     #region Constants
     private const string ContinueButtonName = "ContinueButton";
@@ -40,6 +42,18 @@ public class PauseMenu : MonoBehaviour
     private const string MiddleTabName = "MiddleTab";
     private const string BottomTabName = "BottomTab";
     private const string EscapeButtonName = "Button";
+    private const string AudioBackPrompt = "AudioBackPrompt";
+    private const string ControlsBackPrompt = "ControlsBackPrompt";
+    private const string PauseBackPrompt = "PauseBackPrompt";
+    private const string SettingsBackPrompt = "SettingsBackPrompt";
+    private const string ControllerAudioBackPrompt = "ControllerAudioBackPrompt";
+    private const string ControllerControlsBackPrompt = "ControllerControlsBackPrompt";
+    private const string ControllerSettingsBackPrompt = "ControllerSettingsBackPrompt";
+    private const string ControllerPauseBackPrompt = "ControllerPauseBackPrompt";
+    private const string ControllerAudioInput = "ControllerAudioBackInput";
+    private const string ControllerControlsInput = "ControllerControlsBackInput";
+    private const string ControllerSelectionInput = "ControllerSettingsBackInput";
+    private const string ControllerPauseBackInput = "ControllerPauseBackInput";
     #endregion
 
     #region Private
@@ -65,6 +79,18 @@ public class PauseMenu : MonoBehaviour
     private SettingsManager _settingsManager;
     private Coroutine _activeCoroutine;
     private UQueryBuilder<Button> _allButtons;
+    private Label _controllerPauseBackInput;
+    private Label _controllerSettingsBackInput;
+    private Label _controllerAudioBackInput;
+    private Label _controllerControlsBackInput;
+    private VisualElement _audioBackPrompt;
+    private VisualElement _controlsBackPrompt;
+    private VisualElement _pauseBackPrompt;
+    private VisualElement _settingsBackPrompt;
+    private VisualElement _controllerAudioBackPrompt;
+    private VisualElement _controllerControlsBackPrompt;
+    private VisualElement _controllerSettingsBackPrompt;
+    private VisualElement _controllerPauseBackPrompt;
 
     private GameObject _lastFocusedElement;
     private Button _lastFocusedVisualElement;
@@ -74,6 +100,8 @@ public class PauseMenu : MonoBehaviour
     private int _currentScreenIndex = 0;
 
     private bool _isFocused = false;
+    // 0 = MnK, 1 = Xbox, 2 = PS 
+    private int _inputDeviceType = 0;
     #endregion
 
     /// <summary>
@@ -107,6 +135,20 @@ public class PauseMenu : MonoBehaviour
         _topTab = _pauseMenu.rootVisualElement.Q(TopTabName);
         _middleTab = _pauseMenu.rootVisualElement.Q(MiddleTabName);
         _bottomTab = _pauseMenu.rootVisualElement.Q(BottomTabName);
+
+        // Assigning button prompt references
+        _controllerAudioBackInput = _pauseMenu.rootVisualElement.Q<Label>(ControllerAudioInput);
+        _controllerControlsBackInput = _pauseMenu.rootVisualElement.Q<Label>(ControllerControlsInput);
+        _controllerSettingsBackInput =  _pauseMenu.rootVisualElement.Q<Label>(ControllerSelectionInput);
+        _controllerPauseBackInput = _pauseMenu.rootVisualElement.Q<Label>(ControllerPauseBackInput);
+        _audioBackPrompt = _pauseMenu.rootVisualElement.Q(AudioBackPrompt);
+        _controlsBackPrompt = _pauseMenu.rootVisualElement.Q(ControlsBackPrompt);
+        _pauseBackPrompt = _pauseMenu.rootVisualElement.Q(PauseBackPrompt);
+        _settingsBackPrompt = _pauseMenu.rootVisualElement.Q(SettingsBackPrompt);
+        _controllerAudioBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerAudioBackPrompt);
+        _controllerControlsBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerControlsBackPrompt);
+        _controllerSettingsBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerSettingsBackPrompt);
+        _controllerPauseBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerPauseBackPrompt);
 
         // Registering button callbacks
         _continueButton.RegisterCallback<NavigationSubmitEvent>(ContinuePressed);
@@ -189,8 +231,14 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         PlayerController.Instance.PlayerControls.BasicControls.PauseGame.performed += PauseGamePerformed;
+        PlayerController.Instance.PlayerControls.UI.Cancel.performed += ctx => PerformBackInput();
         _tabbedMenu = TabbedMenu.Instance;
         PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
+
+        // New input detection
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Point.performed += DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Navigate.performed += DetectInputType;
 
         _settingsManager = SettingsManager.Instance;
         if (_settingsManager != null)
@@ -207,7 +255,11 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        PlayerController.Instance.PlayerControls.UI.Cancel.performed -= ctx => PerformBackInput();
         PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Point.performed -= DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Navigate.performed -= DetectInputType;
 
         // Unregistering button callbacks
         _continueButton.UnregisterCallback<NavigationSubmitEvent>(ContinuePressed);
@@ -314,6 +366,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         _pauseMenu.rootVisualElement.style.display = isActive ? DisplayStyle.Flex : DisplayStyle.None;
+        UpdateInputPrompts();
         Time.timeScale = isActive ? 0 : 1;
     }
 
@@ -334,12 +387,22 @@ public class PauseMenu : MonoBehaviour
         {
             TogglePauseMenu(false);
         }
+        // Return to previous pause screen from a settings screen
+        else
+        {
+            PerformBackInput();
+        }
+    }
+    
+    private void PerformBackInput()
+    {
         // Return to main pause screen from settings selection
-        else if (_currentScreenIndex == 1)
+        if (_currentScreenIndex == 1)
         {
             _currentScreenIndex = 0;
             _selectionHolder.style.display = DisplayStyle.None;
             _pauseHolder.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
         // Return to settings selection from settings submenu
         else if (_currentScreenIndex == 2)
@@ -353,6 +416,7 @@ public class PauseMenu : MonoBehaviour
             _audioHolder.style.display = DisplayStyle.None;
             _controlsHolder.style.display = DisplayStyle.None;
             _selectionHolder.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
     }
 
@@ -417,6 +481,7 @@ public class PauseMenu : MonoBehaviour
         _currentScreenIndex = 1;
         _pauseHolder.style.display = DisplayStyle.None;
         _selectionHolder.style.display = DisplayStyle.Flex;
+        UpdateInputPrompts();
     }
 
     /// <summary>
@@ -434,6 +499,7 @@ public class PauseMenu : MonoBehaviour
         }
         _selectionHolder.style.display = DisplayStyle.None;
         _audioHolder.style.display = DisplayStyle.Flex;
+        UpdateInputPrompts();
     }
 
     /// <summary>
@@ -449,6 +515,7 @@ public class PauseMenu : MonoBehaviour
         }
         _selectionHolder.style.display = DisplayStyle.None;
         _controlsHolder.style.display = DisplayStyle.Flex;
+        UpdateInputPrompts();
     }
 
     /// <summary>
@@ -540,5 +607,72 @@ public class PauseMenu : MonoBehaviour
         float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
             direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
         selectedSlider.value += 2.5f * multiplier;
+    }
+
+    /// <summary>
+    /// Called to determine what type of input device is being used
+    /// </summary>
+    /// <param name="context">Input context</param>
+    private void DetectInputType(InputAction.CallbackContext context)
+    {
+        string controlName = context.control.device.displayName.ToLower();
+        int newInputDevice;
+
+        if (controlName.Contains("xbox"))
+        {
+            newInputDevice = 1;
+        }
+        else if (controlName.Contains("playstation") ||
+            controlName.Contains("dualsense") || controlName.Contains("dualshock"))
+        {
+            newInputDevice = 2;
+        }
+        else
+        {
+            newInputDevice = 0;
+        }
+
+        if (newInputDevice == _inputDeviceType) { return; }
+
+        _inputDeviceType = newInputDevice;
+        UpdateInputPrompts();
+    }
+
+    /// <summary>
+    /// Changes input prompts when the device type changes
+    /// </summary>
+    private void UpdateInputPrompts()
+    {
+        if (_currentScreenIndex == 0)
+        {
+            _pauseBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerPauseBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        else if (_currentScreenIndex == 1)
+        {
+            _settingsBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerSettingsBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        else if (_currentScreenIndex == 2)
+        {
+            _audioBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controlsBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+
+            _controllerAudioBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerControlsBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        if (_inputDeviceType == 0)
+        {
+            UnityEngine.Cursor.visible = true;
+            return;
+        }
+
+        UnityEngine.Cursor.visible = false;
+
+        _controllerAudioBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerControlsBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerSettingsBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerPauseBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
     }
 }
