@@ -607,6 +607,8 @@ MonoBehaviour:
       Data3: 1272656575
       Data4: -939859315
     Path: event:/Misc/UI_Confirm
+  _xboxBack: {fileID: 2800000, guid: 5ee00b0fc60217e46b09668bc78684c9, type: 3}
+  _psBack: {fileID: 2800000, guid: 414891f1f1903c544b2e81ec1314c940, type: 3}
 --- !u!1 &6549096012365011319
 GameObject:
   m_ObjectHideFlags: 0
