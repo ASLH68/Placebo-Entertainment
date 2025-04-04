@@ -57,7 +57,10 @@ public class SlideshowManager : MonoBehaviour
     // 0 = keyboard, 1 = xbox, 2 = ps
     private int _inputDeviceType = 0;
 
-    private bool _isFillingMeter = false;
+    private const float MeterHoldTime = 2.4f;
+    private const int KeyboardMeterWidth = 385;
+    private const int XboxMeterWidth = 306;
+    private const int PsMeterWidth = 307;
 
 
     /// <summary>
@@ -259,19 +262,19 @@ public class SlideshowManager : MonoBehaviour
         float elapsedTime = 0f;
         float lerpingTime;
 
-        while (elapsedTime < 2.4f)
+        while (elapsedTime < MeterHoldTime)
         {
-            lerpingTime = elapsedTime / 2.4f;
-            _keyboardMeter.style.width = Mathf.Lerp(0, 379, lerpingTime);
-            _xboxMeter.style.width = Mathf.Lerp(0, 300, lerpingTime);
-            _psMeter.style.width = Mathf.Lerp(0, 301, lerpingTime);
+            lerpingTime = elapsedTime / MeterHoldTime;
+            _keyboardMeter.style.width = Mathf.Lerp(0, KeyboardMeterWidth, lerpingTime);
+            _xboxMeter.style.width = Mathf.Lerp(0, XboxMeterWidth, lerpingTime);
+            _psMeter.style.width = Mathf.Lerp(0, PsMeterWidth, lerpingTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        _keyboardMeter.style.width = 379;
-        _xboxMeter.style.width = 300;
-        _psMeter.style.width = 301;
+        _keyboardMeter.style.width = KeyboardMeterWidth;
+        _xboxMeter.style.width = XboxMeterWidth;
+        _psMeter.style.width = PsMeterWidth;
     }
 
     /// <summary>
