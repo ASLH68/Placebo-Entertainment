@@ -57,6 +57,8 @@ public class SlideshowManager : MonoBehaviour
     // 0 = keyboard, 1 = xbox, 2 = ps
     private int _inputDeviceType = 0;
 
+    private bool _isFillingMeter = false;
+
 
     /// <summary>
     /// Setting references and pause inputs. Also plays intro slide show if needed.
@@ -87,7 +89,10 @@ public class SlideshowManager : MonoBehaviour
                     TogglePlayPause();
             };
 
-        _skipVideo.performed += DetectInputType;
+        _skipVideo.started += ctx => DisplaySkipMeter(true);
+        _skipVideo.canceled += ctx => DisplaySkipMeter(false);
+
+        _skipVideo.started += DetectInputType;
         _controllerDetection.performed += DetectInputType;
         _mouseDetection.performed += DetectInputType;
         
@@ -98,11 +103,14 @@ public class SlideshowManager : MonoBehaviour
         _xboxSkip = _slideshowUI.rootVisualElement.Q("CutsceneSkipXbox");
         _psSkip = _slideshowUI.rootVisualElement.Q("CutsceneSkipPS");
         _keyboardSkip = _slideshowUI.rootVisualElement.Q("CutsceneSkipMnK");
+        _keyboardMeter = _slideshowUI.rootVisualElement.Q("SkipMeterMnK");
+        _psMeter = _slideshowUI.rootVisualElement.Q("SkipMeterPS");
+        _xboxMeter = _slideshowUI.rootVisualElement.Q("SkipMeterXbox");
 
         _xboxSkip.style.display = DisplayStyle.None;
-        //_xboxMeter.style.display = DisplayStyle.None;
+        _xboxMeter.style.display = DisplayStyle.None;
         _psSkip.style.display = DisplayStyle.None;
-        //_psMeter.style.display = DisplayStyle.None;
+        _psMeter.style.display = DisplayStyle.None;
 
         _slideshowPlayer.loopPointReached += DonePlaying;
         _slideshowPlayer.prepareCompleted += PlayVideo;
@@ -124,6 +132,8 @@ public class SlideshowManager : MonoBehaviour
         _skipVideo.performed -= DetectInputType;
         _controllerDetection.performed -= DetectInputType;
         _mouseDetection.performed -= DetectInputType;
+        _skipVideo.performed -= ctx => DisplaySkipMeter(true);
+        _skipVideo.canceled -= ctx => DisplaySkipMeter(false);
     }
 
     ~SlideshowManager()
@@ -133,6 +143,8 @@ public class SlideshowManager : MonoBehaviour
         _skipVideo.performed -= DetectInputType;
         _controllerDetection.performed -= DetectInputType;
         _mouseDetection.performed -= DetectInputType;
+        _skipVideo.performed -= ctx => DisplaySkipMeter(true);
+        _skipVideo.canceled -= ctx => DisplaySkipMeter(false);
     }
 
     /// <summary>
@@ -226,6 +238,42 @@ public class SlideshowManager : MonoBehaviour
         DonePlaying(_slideshowPlayer);
     }
 
+    private void DisplaySkipMeter(bool shouldFill)
+    {
+        StopAllCoroutines();
+
+        if (shouldFill)
+        {
+            StartCoroutine(UpdateSkipMeter());
+        }
+        else
+        {
+            _keyboardMeter.style.width = 0;
+            _psMeter.style.width = 0;
+            _xboxMeter.style.width = 0;
+        }
+    }
+
+    private IEnumerator UpdateSkipMeter()
+    {
+        float elapsedTime = 0f;
+        float lerpingTime;
+
+        while (elapsedTime < 2.4f)
+        {
+            lerpingTime = elapsedTime / 2.4f;
+            _keyboardMeter.style.width = Mathf.Lerp(0, 379, lerpingTime);
+            _xboxMeter.style.width = Mathf.Lerp(0, 300, lerpingTime);
+            _psMeter.style.width = Mathf.Lerp(0, 301, lerpingTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _keyboardMeter.style.width = 379;
+        _xboxMeter.style.width = 300;
+        _psMeter.style.width = 301;
+    }
+
     /// <summary>
     /// Called to determine what type of input device is being used
     /// </summary>
@@ -261,12 +309,12 @@ public class SlideshowManager : MonoBehaviour
     private void UpdateInputPrompts()
     {
         _keyboardSkip.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
-        //_keyboardMeter.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        _keyboardMeter.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
 
         _xboxSkip.style.display = _inputDeviceType == 1 ? DisplayStyle.Flex : DisplayStyle.None;
-        //_xboxMeter.style.display = _inputDeviceType == 1 ? DisplayStyle.Flex : DisplayStyle.None;
+        _xboxMeter.style.display = _inputDeviceType == 1 ? DisplayStyle.Flex : DisplayStyle.None;
 
         _psSkip.style.display = _inputDeviceType == 2 ? DisplayStyle.Flex : DisplayStyle.None;
-        //_psMeter.style.display = _inputDeviceType == 2 ? DisplayStyle.Flex : DisplayStyle.None;
+        _psMeter.style.display = _inputDeviceType == 2 ? DisplayStyle.Flex : DisplayStyle.None;
     }
 }
