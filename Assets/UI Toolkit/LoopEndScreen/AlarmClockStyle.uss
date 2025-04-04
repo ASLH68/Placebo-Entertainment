@@ -16,6 +16,7 @@
     translate: 0 0;
     width: 333px;
     height: 146px;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .AlarmTextBig {
