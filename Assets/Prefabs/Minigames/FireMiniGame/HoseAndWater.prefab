@@ -11063,7 +11063,7 @@ MonoBehaviour:
   _maxWaterAmount: 100
   _meterSpendRate: 0.25
   _meterRefillRate: 0.5
-  _interactPromptText: FISH
+  _interactPromptText: Silus
   _waterSpray: {fileID: 284831111557341597}
   fishPickupEvent:
     Guid:
