@@ -241,6 +241,10 @@ public class SlideshowManager : MonoBehaviour
         DonePlaying(_slideshowPlayer);
     }
 
+    /// <summary>
+    /// Called to toggle filling the hold to skip meter
+    /// </summary>
+    /// <param name="shouldFill"></param>
     private void DisplaySkipMeter(bool shouldFill)
     {
         StopAllCoroutines();
@@ -257,6 +261,9 @@ public class SlideshowManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Fills the hold to skip meter over time
+    /// </summary>
     private IEnumerator UpdateSkipMeter()
     {
         float elapsedTime = 0f;
