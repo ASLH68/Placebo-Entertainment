@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemDescription:
-    _description: A translation book for the Goop language.
+    _description: A translation book for Olpy's language.
     _exitResponse: Leave
     _eventToTrigger: {fileID: 0}
     _eventTag: 0
