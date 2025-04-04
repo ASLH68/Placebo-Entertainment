@@ -41,10 +41,22 @@ public class SlideshowManager : MonoBehaviour
     private EventReference _selectedAudio;
     private PlayerControls _playerControls;
     private InputAction _skipVideo;
+    private InputAction _controllerDetection;
+    private InputAction _mouseDetection;
     private UIDocument _slideshowUI;
     private VideoPlayer _slideshowPlayer;
     private bool _wasCreditsShown = false;
     private EventInstance _currentAudioPlayback;
+    private VisualElement _xboxSkip;
+    private VisualElement _xboxMeter;
+    private VisualElement _psSkip;
+    private VisualElement _psMeter;
+    private VisualElement _keyboardSkip;
+    private VisualElement _keyboardMeter;
+
+    // 0 = keyboard, 1 = xbox, 2 = ps
+    private int _inputDeviceType = 0;
+
 
     /// <summary>
     /// Setting references and pause inputs. Also plays intro slide show if needed.
@@ -59,7 +71,11 @@ public class SlideshowManager : MonoBehaviour
         _playerControls.BasicControls.Enable();
         
         _skipVideo = _playerControls.FindAction("SkipPause");
+        _controllerDetection = _playerControls.FindAction("ControllerDetection");
+        _mouseDetection = _playerControls.FindAction("Look");
         _skipVideo.Enable();
+        _controllerDetection.Enable();
+        _mouseDetection.Enable();
         
         // Skip video on hold, pause on press
         _skipVideo.performed +=
@@ -70,10 +86,23 @@ public class SlideshowManager : MonoBehaviour
                 else // Could check for PressInteraction but easier to just assume it's a press.
                     TogglePlayPause();
             };
+
+        _skipVideo.performed += DetectInputType;
+        _controllerDetection.performed += DetectInputType;
+        _mouseDetection.performed += DetectInputType;
         
         
         _slideshowUI = GetComponent<UIDocument>();
         _slideshowPlayer = GetComponent<VideoPlayer>();
+
+        _xboxSkip = _slideshowUI.rootVisualElement.Q("CutsceneSkipXbox");
+        _psSkip = _slideshowUI.rootVisualElement.Q("CutsceneSkipPS");
+        _keyboardSkip = _slideshowUI.rootVisualElement.Q("CutsceneSkipMnK");
+
+        _xboxSkip.style.display = DisplayStyle.None;
+        //_xboxMeter.style.display = DisplayStyle.None;
+        _psSkip.style.display = DisplayStyle.None;
+        //_psMeter.style.display = DisplayStyle.None;
 
         _slideshowPlayer.loopPointReached += DonePlaying;
         _slideshowPlayer.prepareCompleted += PlayVideo;
@@ -92,13 +121,18 @@ public class SlideshowManager : MonoBehaviour
     {
         _slideshowPlayer.loopPointReached -= DonePlaying;
         _slideshowPlayer.prepareCompleted -= PlayVideo;
+        _skipVideo.performed -= DetectInputType;
+        _controllerDetection.performed -= DetectInputType;
+        _mouseDetection.performed -= DetectInputType;
     }
 
     ~SlideshowManager()
     {
         _slideshowPlayer.loopPointReached -= DonePlaying;
         _slideshowPlayer.prepareCompleted -= PlayVideo;
-        
+        _skipVideo.performed -= DetectInputType;
+        _controllerDetection.performed -= DetectInputType;
+        _mouseDetection.performed -= DetectInputType;
     }
 
     /// <summary>
@@ -119,6 +153,7 @@ public class SlideshowManager : MonoBehaviour
         }
         else
         {
+            SceneManager.LoadScene(_mainMenuBuildIndex);
             SceneManager.LoadScene(_mainMenuBuildIndex);
         }
     }
@@ -189,5 +224,49 @@ public class SlideshowManager : MonoBehaviour
     private void OnSkipVideo()
     {
         DonePlaying(_slideshowPlayer);
+    }
+
+    /// <summary>
+    /// Called to determine what type of input device is being used
+    /// </summary>
+    /// <param name="context">Input context</param>
+    private void DetectInputType(InputAction.CallbackContext context)
+    {
+        string controlName = context.control.device.displayName.ToLower();
+        int newInputDevice;
+
+        if (controlName.Contains("xbox"))
+        {
+            newInputDevice = 1;
+        }
+        else if (controlName.Contains("playstation") ||
+            controlName.Contains("dualsense") || controlName.Contains("dualshock"))
+        {
+            newInputDevice = 2;
+        }
+        else
+        {
+            newInputDevice = 0;
+        }
+
+        if (newInputDevice == _inputDeviceType) { return; }
+
+        _inputDeviceType = newInputDevice;
+        UpdateInputPrompts();
+    }
+
+    /// <summary>
+    /// Changes input prompts when the device type changes
+    /// </summary>
+    private void UpdateInputPrompts()
+    {
+        _keyboardSkip.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        //_keyboardMeter.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+
+        _xboxSkip.style.display = _inputDeviceType == 1 ? DisplayStyle.Flex : DisplayStyle.None;
+        //_xboxMeter.style.display = _inputDeviceType == 1 ? DisplayStyle.Flex : DisplayStyle.None;
+
+        _psSkip.style.display = _inputDeviceType == 2 ? DisplayStyle.Flex : DisplayStyle.None;
+        //_psMeter.style.display = _inputDeviceType == 2 ? DisplayStyle.Flex : DisplayStyle.None;
     }
 }
