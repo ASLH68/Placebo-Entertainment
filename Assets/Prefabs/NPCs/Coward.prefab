@@ -337,7 +337,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
-        _answer: Yes of course. <b>*Pets the coward*
+        _answer: Yes of course. <b>*Pets Odon*
         _nextResponseIndex: 01000000
         _advancesNpcState: 0
         _endsDialogue: 0
