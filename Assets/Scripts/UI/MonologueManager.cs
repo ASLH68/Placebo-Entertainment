@@ -8,6 +8,7 @@
 *******************************************************************/
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using PlaceboEntertainment.UI;
 
@@ -57,8 +58,12 @@ public class MonologueManager : MonoBehaviour
     {
         if (monologueIndex >= 0 && monologueIndex < _monologueNodes.Length)
         {
+            //For the timers to stop when monologuing
+            foreach (TimerStruct timerStruct in TimerManager.Instance._timers.ToList())
+            {
+                timerStruct.timer.StopTimer();
+            }
             _currentNode = _monologueNodes[monologueIndex];
-
             _playerController.LockCharacter(true);
             _playerInteractBehavior.StopDetectingInteractions();
             _tabbedMenu.DisplayDialogue(_playerName, _currentNode.MonologueText, null);
@@ -73,6 +78,11 @@ public class MonologueManager : MonoBehaviour
     /// </summary>
     public void ExitMonologue()
     {
+        //For the timers to start when monologuing has stopped
+        foreach (TimerStruct timerStruct in TimerManager.Instance._timers.ToList())
+        {
+            timerStruct.timer.StartTimer();
+        }
         _tabbedMenu.ToggleDialogue(false);
         _playerController.LockCharacter(false);
         _playerInteractBehavior.StartDetectingInteractions();
