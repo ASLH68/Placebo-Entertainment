@@ -83,6 +83,9 @@ public class MonologueManager : MonoBehaviour
         {
             timerStruct.timer.StartTimer();
         }
+        
+        //Put achievement "Find what is beyond the marion" here
+        
         _tabbedMenu.ToggleDialogue(false);
         _playerController.LockCharacter(false);
         _playerInteractBehavior.StartDetectingInteractions();

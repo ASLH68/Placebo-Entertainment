@@ -250,6 +250,9 @@ namespace PlaceboEntertainment.UI
             TimeSpan timeSpanSinceStart = TimeSpan.FromSeconds(timeSinceStart);
             string timeSinceStartString = timeSpanSinceStart.ToString("mm':'ss");
             _alarmClockMenu.text = timeSinceStartString;
+            
+            // Put "Complete the game in x time" achievement here. For "x time" maybe make an if statement and a listener for when the game is complete if possible
+            
         }
 
         #endregion
