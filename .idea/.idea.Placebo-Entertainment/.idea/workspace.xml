@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0ca99064-d62d-4298-bd79-b6c397975cbd" name="Changes" comment="" />
+    <list default="true" id="0ca99064-d62d-4298-bd79-b6c397975cbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Placebo-Entertainment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Placebo-Entertainment/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SteamIntegration/SteamScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SteamIntegration/SteamGameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SteamIntegration/SteamScript.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SteamIntegration/SteamGameManager.cs.meta" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,7 +65,7 @@
 }</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor &amp; Play">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/../Builds/Temp/Beyond The Marion.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../Builds/Temp\Beyond The Marion.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="C:\Users\aslhu\Desktop\School\Junior\Placebo\Builds\Temp" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -135,6 +139,7 @@
       <workItem from="1743793088933" duration="558000" />
       <workItem from="1743793981902" duration="575000" />
       <workItem from="1744396724814" duration="364000" />
+      <workItem from="1744402623056" duration="1137000" />
     </task>
     <servers />
   </component>
