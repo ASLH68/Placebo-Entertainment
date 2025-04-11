@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Box02_part02
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 317975f376b9f3e4fac312e22ebc8ad3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 317975f376b9f3e4fac312e22ebc8ad3, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -55,6 +59,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 317975f376b9f3e4fac312e22ebc8ad3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 317975f376b9f3e4fac312e22ebc8ad3, type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -107,6 +115,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Box02_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: c974c8b133e36d046b74e54f20b5f62a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c974c8b133e36d046b74e54f20b5f62a, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -150,6 +162,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: c974c8b133e36d046b74e54f20b5f62a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: c974c8b133e36d046b74e54f20b5f62a, type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
