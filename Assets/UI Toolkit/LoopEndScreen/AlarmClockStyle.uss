@@ -3,34 +3,48 @@
     -unity-font-definition: url("project://database/Assets/UI%20Toolkit/Orbitron-VariableFont_wght%20SDF.asset?fileID=11400000&guid=5e4f18e21386b0e468c2600c20319a87&type=2#Orbitron-VariableFont_wght SDF");
     font-size: 91px;
     color: rgba(197, 29, 29, 0);
-    width: 333px;
+    width: 353px;
     height: 146px;
-    transform-origin: left top;
+    padding-bottom: 0;
+    padding-top: 10px;
+    padding-right: 0;
+    padding-left: 15px
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/Art/UI/CutsceneSkip/SkipMeter.png?fileID=2800000&guid=f9aaf0d0870b43d4bbbd2f3636c144fe&type=3#SkipMeter");
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0);
+    transform-origin: right top;
     transition-duration: 0.35s;
+    padding-left: 15px;
 }
 
 .AlarmTextBaseActive {
     color: rgb(197, 29, 29);
     transition-duration: 2s;
-    transform-origin: left top;
+    transform-origin: right top;
     translate: 0 0;
-    width: 333px;
+    width: 353px;
     height: 146px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/Art/UI/CutsceneSkip/SkipMeter.png?fileID=2800000&guid=f9aaf0d0870b43d4bbbd2f3636c144fe&type=3#SkipMeter");
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0.9);
+    justify-content: flex-start;
+    align-items: stretch;
+    align-self: auto;
+    padding-left: 15px;
 }
 
 .AlarmTextBig {
-    position: relative;
-    right: auto;
-    top: auto;
     scale: 5 5;
     transition-duration: 3s;
     left: auto;
-    width: 333px;
+    width: 353px;
     height: 146px;
-    transform-origin: left top;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("project://database/Assets/Art/UI/CutsceneSkip/SkipMeter.png?fileID=2800000&guid=f9aaf0d0870b43d4bbbd2f3636c144fe&type=3#SkipMeter");
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0);
+    transform-origin: right top;
     transition-property: all;
-    translate: 150px 200px;
+    translate: -75px 200px;
 }
 
 .AlarmTextBackground {
