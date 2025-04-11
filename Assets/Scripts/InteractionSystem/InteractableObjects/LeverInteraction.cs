@@ -62,13 +62,13 @@ public class LeverInteraction : MonoBehaviour, IInteractable
         //set to true if not already
         if(input && !_isOn)
         {
-            _handle.transform.Rotate(0, 0, 30, Space.Self);
+            _handle.transform.Rotate(-120, 0, 0, Space.Self);
             _isOn = true;
         }
         //set to false if not already
         else if(!input && _isOn)
         {
-            _handle.transform.Rotate(0, 0, -30, Space.Self);
+            _handle.transform.Rotate(120, 0, 0, Space.Self);
             _isOn = false;
         }
     }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.82332385, g: 0.94773924, b: 0.9633506, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -524,6 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8072e34b35b0dcd4cbf2c2179d1afa16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isFuseBuild: 0
   _mainMenuDoc: {fileID: 1117348777}
   _introVideoBuildIndex: 1
   _tabAnimationTime: 0.25
@@ -542,6 +543,9 @@ MonoBehaviour:
       Data4: -939859315
     Path: event:/Misc/UI_Confirm
   _gameSceneVideoIndex: 2
+  _controllerStart: {fileID: 2800000, guid: 5f94cc31ec401304ebed7fd3649a45e3, type: 3}
+  _xboxBack: {fileID: 2800000, guid: 5ee00b0fc60217e46b09668bc78684c9, type: 3}
+  _psBack: {fileID: 2800000, guid: 414891f1f1903c544b2e81ec1314c940, type: 3}
 --- !u!328 &1117348780
 VideoPlayer:
   m_ObjectHideFlags: 0

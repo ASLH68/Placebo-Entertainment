@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3197978693663432061
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8363901018563324463}
+  - component: {fileID: 8988970857005786147}
+  - component: {fileID: 7371263332850259969}
+  m_Layer: 0
+  m_Name: TimerManager FUSE
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8363901018563324463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3197978693663432061}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 11.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8988970857005786147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3197978693663432061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33fedf2a2a58354ab946d3e2fcf483f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timers:
+  - timerName: RobotDeathTimer
+    timer:
+      _maxTime: 80
+      _isRunning: 1
+      _eventTimerCalls: {fileID: 11400000, guid: fc8258980d4d13341abe42a88ac6fdb6, type: 2}
+      _NPCToAlert: 5
+  - timerName: 30SecondsRobotPlusDelay
+    timer:
+      _maxTime: 50
+      _isRunning: 1
+      _eventTimerCalls: {fileID: 11400000, guid: 718aa8d808aa79a40abc3266d2f16f80, type: 2}
+      _NPCToAlert: 6
+  - timerName: GeneratorExplodeTimer
+    timer:
+      _maxTime: 81
+      _isRunning: 1
+      _eventTimerCalls: {fileID: 11400000, guid: 3ecd2838e2ea86b42a087aad7f6a97a6, type: 2}
+      _NPCToAlert: 6
+  - timerName: FireFailTimer
+    timer:
+      _maxTime: 270
+      _isRunning: 1
+      _eventTimerCalls: {fileID: 11400000, guid: 3ecd2838e2ea86b42a087aad7f6a97a6, type: 2}
+      _NPCToAlert: 7
+  - timerName: 30SecondsFirePlusDelay
+    timer:
+      _maxTime: 240
+      _isRunning: 1
+      _eventTimerCalls: {fileID: 11400000, guid: 718aa8d808aa79a40abc3266d2f16f80, type: 2}
+      _NPCToAlert: 7
+--- !u!114 &7371263332850259969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3197978693663432061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a0acc881a336094997b0fb61c6d1983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventsToListenFor:
+  - _npcEvent: {fileID: 11400000, guid: a27013fe86c89d74f8695e9ed8cb9f73, type: 2}
+    _npcEventTag: 5
+    _onEventTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8988970857005786147}
+          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
+          m_MethodName: RemoveTimerNoReturn
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: RobotDeathTimer
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8988970857005786147}
+          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
+          m_MethodName: RemoveTimerNoReturn
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 30SecondsRobotPlusDelay
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8988970857005786147}
+          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
+          m_MethodName: RemoveTimerNoReturn
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: GeneratorExplodeTimer
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _npcEvent: {fileID: 11400000, guid: fc8258980d4d13341abe42a88ac6fdb6, type: 2}
+    _npcEventTag: 2
+    _onEventTriggered:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8988970857005786147}
+          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
+          m_MethodName: RemoveTimerNoReturn
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: FireFailTimer
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8988970857005786147}
+          m_TargetAssemblyTypeName: TimerManager, Assembly-CSharp
+          m_MethodName: RemoveTimerNoReturn
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 30SecondsFirePlusDelay
+            m_BoolArgument: 0
+          m_CallState: 2

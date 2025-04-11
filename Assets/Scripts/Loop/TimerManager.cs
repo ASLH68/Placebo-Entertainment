@@ -62,6 +62,7 @@ public class TimerManager : MonoBehaviour
         {
             timer.timer.IncreaseTime(0, timer.timer._maxTime);
         }
+        
     }
 
     public void Update()
@@ -70,7 +71,7 @@ public class TimerManager : MonoBehaviour
         {
             //So i found a page on stack that said make it .ToList bc then the
             //compiler makes a copy of the list and iterates over that instead
-            //Apparently effeciency of this "isn't great" (surprise suprise)
+            //Apparently efficiency of this "isn't great" (surprise surprise)
             //so im going to look into solutions, but as it is ive spent wayyy
             //too long on timers so im just going to leave the script as is
             foreach (TimerStruct timerStruct in _timers.ToList())
