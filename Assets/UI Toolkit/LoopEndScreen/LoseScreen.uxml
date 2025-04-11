@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/LoopEndScreen/AlarmClockStyle.uss?fileID=7433441132597879392&amp;guid=450922c336101f447b3dbd55804487fe&amp;type=3#AlarmClockStyle" />
-    <ui:VisualElement name="Container" picking-mode="Ignore" style="flex-grow: 1;">
-        <ui:Label tabindex="-1" text="00:20" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Clock" picking-mode="Ignore" class="AlarmTextBase" />
+    <ui:VisualElement name="Container" picking-mode="Ignore" style="flex-grow: 1; display: flex;">
+        <ui:Label tabindex="-1" text="00:20" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Clock" picking-mode="Ignore" class="AlarmTextBase" style="display: flex; position: absolute; left: 1562px; top: 4px; padding-top: 10px; padding-bottom: 0; padding-right: 0;" />
     </ui:VisualElement>
 </ui:UXML>
