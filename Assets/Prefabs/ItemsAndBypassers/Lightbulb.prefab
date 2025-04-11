@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemDescription:
-    _description: A solar lightbulb needed by the Robot.
+    _description: A solar lightbulb needed by the S.A.M.U.31.
     _exitResponse: Leave
     _eventToTrigger: {fileID: 11400000, guid: b0ff38f0f20db8a4ab04033934de185c, type: 2}
     _eventTag: 1
