@@ -30,6 +30,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] public Texture2D[] _psControllerUI;
     [SerializeField] public Texture2D[] _xboxControllerUI;
+    
+    //code specifically for the "The other company" achievement
+    private float _animatorIdleTime;
+    private bool _idleAchievementNeeded = true;
 
     //Anim Controller
     public static Animator Animator { get; private set; }
@@ -121,6 +125,17 @@ public class PlayerController : MonoBehaviour
             
             //Starts Walking Anim
             Animator.SetFloat("Speed", _velocity.magnitude);
+            
+            //Code specifically for the "The other company" achievement
+            if(_idleAchievementNeeded)
+            ++_animatorIdleTime;
+
+        }
+
+        if (_animatorIdleTime > 24 && _idleAchievementNeeded)
+        {
+            //Put "The other company" achievement here and also a way to save the achievement then use in the if statement if null so it doesn't keep giving the achievement
+            _idleAchievementNeeded = false; 
         }
         if(_isKinemat)
         {

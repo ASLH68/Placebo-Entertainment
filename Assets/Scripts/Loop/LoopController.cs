@@ -77,6 +77,8 @@ public class LoopController : MonoBehaviour
         int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(activeSceneIndex);
         _looped = true;
+        
+        //Place achievement "Die" here
     }
 
     /// <summary>
