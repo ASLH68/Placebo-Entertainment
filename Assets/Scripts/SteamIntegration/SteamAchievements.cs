@@ -30,7 +30,6 @@ public class SteamAchievements : MonoBehaviour
             SteamUserStats.SetAchievement(achievementID);
             SteamUserStats.StoreStats();
         }
-        //TEST_ACHIEVEMENT
     }
 
     private void TestSteamAchievement(string achievementID)
