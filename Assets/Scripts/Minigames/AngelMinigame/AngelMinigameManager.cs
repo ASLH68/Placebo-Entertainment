@@ -309,6 +309,9 @@ public class AngelMinigameManager : MonoBehaviour
         {
             _stations[_stationCount].StationScreen.SetActive(false);
         }
+        
+        //Put achievement "Leave the Marion" here 
+        
         _winScreen.SetActive(true);
         print("game over");
     }
