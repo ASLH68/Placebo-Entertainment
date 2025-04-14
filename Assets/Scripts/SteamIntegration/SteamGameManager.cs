@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Steamworks;
+using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
 public class SteamGameManager : MonoBehaviour {
     
@@ -13,15 +14,37 @@ public class SteamGameManager : MonoBehaviour {
             m_GameOverlayActivated = Callback<GameOverlayActivated_t>.Create(OnGameOverlayActivated);
         }
     }
-    
-    private void OnGameOverlayActivated(GameOverlayActivated_t pCallback) {
-        if(pCallback.m_bActive != 0) 
+
+    private void OnGameOverlayActivated(GameOverlayActivated_t pCallback)
+    {
+        // Pause gameplay / cinematic when overlay is opened
+        if (pCallback.m_bActive != 0)
         {
-            GameObject.FindObjectOfType<PauseMenu>().TogglePauseMenu(true);
+            SlideshowManager SSM = FindObjectOfType<SlideshowManager>();
+            
+            if (SSM != null && SSM.IsPlayingVideo)
+            {
+                SSM.ForcePlaybackState(false);
+            }
+            else
+            {
+                FindObjectOfType<PauseMenu>().TogglePauseMenu(true);
+            }
+
         }
-        else 
+        else
         {
-            GameObject.FindObjectOfType<PauseMenu>().TogglePauseMenu(false);
+            // Resume gameplay / cinematic when overlay is closed
+            SlideshowManager SSM = FindObjectOfType<SlideshowManager>();
+            
+            if (SSM != null && SSM.IsPlayingVideo)
+            {
+                SSM.ForcePlaybackState(true);
+            }
+            else
+            {
+                FindObjectOfType<PauseMenu>().TogglePauseMenu(false);
+            }
         }
     }
 }
