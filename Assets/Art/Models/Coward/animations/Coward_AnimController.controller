@@ -407,14 +407,14 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &5289576952994263684
+--- !u!1102 &4591865176773744667
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pet
+  m_Name: pet2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -427,7 +427,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 8305550980712649666, guid: e958a1447d205af48bb64b7253b139b2, type: 3}
+  m_Motion: {fileID: 7400000, guid: 32304b883c9e5de4b8e82cdc189d2b76, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -534,8 +534,8 @@ AnimatorStateMachine:
     m_State: {fileID: 4265425038588666585}
     m_Position: {x: 1020, y: 330, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 5289576952994263684}
-    m_Position: {x: 340, y: 260, z: 0}
+    m_State: {fileID: 4591865176773744667}
+    m_Position: {x: 350, y: 260, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
