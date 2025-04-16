@@ -79,6 +79,7 @@ public class LoopController : MonoBehaviour
         _looped = true;
         
         //Place achievement "Die" here
+        SteamAchievements.Instance.UnlockSteamAchievement("DIE");
     }
 
     /// <summary>

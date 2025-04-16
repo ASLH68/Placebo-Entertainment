@@ -311,6 +311,7 @@ public class AngelMinigameManager : MonoBehaviour
         }
         
         //Put achievement "Leave the Marion" here 
+        SteamAchievements.Instance.UnlockSteamAchievement("LEAVE_MARION");
         
         _winScreen.SetActive(true);
         print("game over");
