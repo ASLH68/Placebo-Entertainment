@@ -6,6 +6,8 @@
 *                 Currently set up for the first playable, will need to be updated
 *                 for future milestones with more features.
 *******************************************************************/
+
+using PlaceboEntertainment.UI;
 using UnityEngine;
 
 public class AngelNpc : BaseNpc
@@ -44,6 +46,11 @@ public class AngelNpc : BaseNpc
     /// </summary>
     public void WinGame()
     {
+        if (TabbedMenu.TimeSpanSinceStart.TotalSeconds <= 60f * 8)
+        {
+            SteamAchievements.Instance.UnlockSteamAchievement("SPEED_RUN");
+        }
+        
         _tabbedMenu.ToggleWin(true);
     }
 
