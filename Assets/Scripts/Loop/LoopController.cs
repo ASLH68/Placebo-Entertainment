@@ -6,6 +6,7 @@
 *    control when the scene resets. 
 *******************************************************************/
 
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,7 @@ public class LoopController : MonoBehaviour
 
     private List<Timer> _runningTimersAtStart = new List<Timer>();
     private List<Timer> _pausedTimersAtStart= new List<Timer>();
+    [SerializeField] private float _endScreenDelay = 3f;
 
     private static bool _looped = false;
 
@@ -74,13 +76,19 @@ public class LoopController : MonoBehaviour
             timer.ResetTimer();
         }
         SaveLoadManager.Instance.SaveGameToSaveFile();
-        int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(activeSceneIndex);
-        _looped = true;
-        
+        StartCoroutine(DelayLoadOfScene());
+
         //Place achievement "Die" here
     }
 
+    IEnumerator DelayLoadOfScene()
+    {
+        yield return new WaitForSeconds(_endScreenDelay);
+        int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(activeSceneIndex);
+        _looped = true;
+    }
+    
     /// <summary>
     /// Called to load the game
     /// </summary>

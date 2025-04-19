@@ -41,7 +41,6 @@ namespace PlaceboEntertainment.UI
         [SerializeField] private UIDocument alarmClockScreen;
         [SerializeField] private int lossTime = 30;
         [SerializeField] private int endScreenTime = 3;
-        [SerializeField] private float endScreenDelay = 5f;
         [SerializeField] private UIDocument crosshair;
         [SerializeField] private UIDocument fadeOutDoc;
         [SerializeField] private UIDocument waterMeter;
