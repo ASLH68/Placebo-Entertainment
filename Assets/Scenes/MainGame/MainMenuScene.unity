@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8072e34b35b0dcd4cbf2c2179d1afa16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isFuseBuild: 0
+  _isFuseBuild: 1
   _mainMenuDoc: {fileID: 1117348777}
   _introVideoBuildIndex: 1
   _tabAnimationTime: 0.25
