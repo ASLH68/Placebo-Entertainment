@@ -41,7 +41,6 @@ namespace PlaceboEntertainment.UI
         [SerializeField] private UIDocument alarmClockScreen;
         [SerializeField] private int lossTime = 30;
         [SerializeField] private int endScreenTime = 3;
-        [SerializeField] private float endScreenDelay = 5f;
         [SerializeField] private UIDocument crosshair;
         [SerializeField] private UIDocument fadeOutDoc;
         [SerializeField] private UIDocument waterMeter;
@@ -94,6 +93,8 @@ namespace PlaceboEntertainment.UI
                 Icon = icon;
             }
         }
+        
+        public static TimeSpan TimeSpanSinceStart;
 
         public bool DialogueVisible { get => _dialogueVisible; }
         #endregion
@@ -247,12 +248,11 @@ namespace PlaceboEntertainment.UI
         private void Update()
         {
             float timeSinceStart = Mathf.Max(Time.timeSinceLevelLoad, 0f);
-            TimeSpan timeSpanSinceStart = TimeSpan.FromSeconds(timeSinceStart);
-            string timeSinceStartString = timeSpanSinceStart.ToString("mm':'ss");
+            TimeSpanSinceStart = TimeSpan.FromSeconds(timeSinceStart);
+            string timeSinceStartString = TimeSpanSinceStart.ToString("mm':'ss");
             _alarmClockMenu.text = timeSinceStartString;
             
             // Put "Complete the game in x time" achievement here. For "x time" maybe make an if statement and a listener for when the game is complete if possible
-            
         }
 
         #endregion

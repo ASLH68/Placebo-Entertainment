@@ -54,6 +54,8 @@ public class SlideshowManager : MonoBehaviour
     private VisualElement _keyboardSkip;
     private VisualElement _keyboardMeter;
 
+    public bool IsPlayingVideo;
+
     // 0 = keyboard, 1 = xbox, 2 = ps
     private int _inputDeviceType = 0;
 
@@ -155,6 +157,8 @@ public class SlideshowManager : MonoBehaviour
     /// </summary>
     private void DonePlaying(VideoPlayer vp)
     {
+        IsPlayingVideo = false;
+            
         if (_isIntroVideoPlayer)
         {
             SceneManager.LoadScene(_levelSceneBuildIndex);
@@ -192,6 +196,7 @@ public class SlideshowManager : MonoBehaviour
         _selectedAudio = _introVideo.Audio;
         _slideshowPlayer.clip = _introVideo.Footage;
         _slideshowPlayer.Prepare();
+        IsPlayingVideo = true;
     }
 
     /// <summary>
@@ -208,6 +213,7 @@ public class SlideshowManager : MonoBehaviour
             _selectedAudio = _endingVideos[videoIndex].Audio;
             _slideshowPlayer.clip = _endingVideos[videoIndex].Footage;
             _slideshowPlayer.Prepare();
+            IsPlayingVideo = true;
         }
         else
         {
@@ -229,6 +235,25 @@ public class SlideshowManager : MonoBehaviour
             else
             {
                 _slideshowPlayer.Play();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Forces the pause to a specific state to ensure the game is paused with the steam overlay opening
+    /// </summary>
+    /// <param name="state"></param>
+    public void ForcePlaybackState(bool state)
+    {
+        if (_slideshowPlayer != null)
+        {
+            if (state && !_slideshowPlayer.isPlaying)
+            {
+                _slideshowPlayer.Play();
+            }
+            else if(!state && _slideshowPlayer.isPlaying)
+            {
+                _slideshowPlayer.Pause();
             }
         }
     }
