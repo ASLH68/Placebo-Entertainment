@@ -79,6 +79,7 @@ public class LoopController : MonoBehaviour
         StartCoroutine(DelayLoadOfScene());
 
         //Place achievement "Die" here
+        SteamAchievements.Instance.UnlockSteamAchievement("DIE");
     }
 
     IEnumerator DelayLoadOfScene()

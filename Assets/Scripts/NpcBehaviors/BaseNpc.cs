@@ -218,6 +218,8 @@ public abstract class BaseNpc : MonoBehaviour
                 //After adding the achievement name (idk how you plan on adding achievements) just add the general code here
                 //im going off this post for achievements https://www.reddit.com/r/gamedev/comments/qphicd/does_anyone_have_experience_with_adding_steam/
                 //so the achivementID should just be the stringname
+                
+                SteamAchievements.Instance.UnlockSteamAchievement(currentResponse.AchievementName);
             }
             
             // Checks if dialogue option should trigger an event
