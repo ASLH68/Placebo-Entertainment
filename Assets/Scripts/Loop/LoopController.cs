@@ -9,6 +9,7 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 
 public class LoopController : MonoBehaviour
@@ -79,7 +80,10 @@ public class LoopController : MonoBehaviour
         StartCoroutine(DelayLoadOfScene());
 
         //Place achievement "Die" here
-        SteamAchievements.Instance.UnlockSteamAchievement("DIE");
+        if (SteamAchievements.Instance.IsUnityNull())
+        {
+            SteamAchievements.Instance.UnlockSteamAchievement("DIE");
+        }
     }
 
     IEnumerator DelayLoadOfScene()

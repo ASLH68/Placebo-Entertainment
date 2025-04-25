@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using Unity.VisualScripting;
 using Utils;
 
 public class PlayerController : MonoBehaviour
@@ -135,8 +136,11 @@ public class PlayerController : MonoBehaviour
         if (_animatorIdleTime > 24 && _idleAchievementNeeded)
         {
             //Put "The other company" achievement here and also a way to save the achievement then use in the if statement if null so it doesn't keep giving the achievement
-            SteamAchievements.Instance.UnlockSteamAchievement("COMPANY");
-            _idleAchievementNeeded = false; 
+            if (!SteamAchievements.Instance.IsUnityNull())
+            {
+                SteamAchievements.Instance.UnlockSteamAchievement("COMPANY");
+                _idleAchievementNeeded = false; 
+            }
         }
         if(_isKinemat)
         {
