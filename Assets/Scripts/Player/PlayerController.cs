@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour
         if (!_isGrounded)
             _isGrounded = Physics.CheckSphere(_groundChecker.position, _groundedDistance, _groundMask);
 
-        if (Interact.IsPressed() && _doOnce == true)
+        if (Interact.IsPressed() && _doOnce)
         {
             InteractionCheck.CallInteract();
         }

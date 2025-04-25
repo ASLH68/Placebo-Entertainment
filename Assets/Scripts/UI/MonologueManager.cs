@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using PlaceboEntertainment.UI;
+using Unity.VisualScripting;
 
 public class MonologueManager : MonoBehaviour
 {
@@ -90,7 +91,7 @@ public class MonologueManager : MonoBehaviour
         _playerController.LockCharacter(false);
         _playerInteractBehavior.StartDetectingInteractions();
 
-        if (!_currentNode.Equals(default(MonologueNode)) && _currentNode.EventToTrigger != null)
+        if (!_currentNode.Equals(default(MonologueNode)) && !_currentNode.EventToTrigger.IsUnityNull())
         { 
             _currentNode.EventToTrigger.TriggerEvent(_currentNode.EventTag);
         }
