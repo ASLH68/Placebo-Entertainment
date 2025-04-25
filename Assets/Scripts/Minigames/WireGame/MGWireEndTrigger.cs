@@ -12,15 +12,20 @@ using UnityEngine;
 
 public class MGWireEndTrigger : MonoBehaviour
 {
+    private MGWire wire;
+    private void Start()
+    {
+        wire = GetComponentInParent<MGWire>();
+    }
+    
     /// <summary>
     /// Calls the wire trigger enter functionality if a wire interacts
     /// </summary>
     /// <param name="other">other collider</param>
     private void OnTriggerEnter(Collider other)
     {
-        MGWire wire = GetComponentInParent<MGWire>();
         MGWireSlot slot = other.GetComponent<MGWireSlot>();
-        if (wire && slot)
+        if (wire && slot && !slot.IsConnected)
         {
             wire.EndTriggerEnter(slot);
         }
@@ -32,10 +37,15 @@ public class MGWireEndTrigger : MonoBehaviour
     /// <param name="other">other collider</param>
     private void OnTriggerExit(Collider other)
     {
-        MGWire wire = other.GetComponent<MGWire>();
-        if (wire)
+        MGWireSlot slot;
+
+        if (wire && other.TryGetComponent<MGWireSlot>(out slot))
         {
-            wire.EndTriggerExit();
+            if (slot.ConnectedWire && slot.ConnectedWire.Equals(wire))
+            {
+                Debug.Log("End trigger " + wire.WireID);
+                wire.EndTriggerExit();
+            }
         }
     }
 }
