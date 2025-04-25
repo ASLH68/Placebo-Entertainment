@@ -79,6 +79,19 @@ public class MGWire : MonoBehaviour
         _jackRb.drag = _drag;
         _jackRb.angularDrag = _angularDrag;
     }
+    
+    /// <summary>
+    /// Make wire end move to a position in front of the camera if the player
+    /// is interacting with this wire
+    /// </summary>
+    private void FixedUpdate()
+    {
+        if (_isInteracting)
+        {
+            Vector3 target = _cameraTrans.position + _cameraTrans.forward * _distanceFromPlayer;
+            _wireEndPosition.position = target;
+        }
+    }
 
     /// <summary>
     /// Invoked by start minigame event triggered by Robot to enable wire interactions
@@ -110,51 +123,12 @@ public class MGWire : MonoBehaviour
         if (_minigameStarted && _canInteract)
         {
             AudioManager.PlaySound(wireGrabEvent, transform.position);
+            
             if (!_isInteracting)
             {
                 OnInteract();
             }
             else
-            {
-                OnDrop();
-            }
-        }
-    }
-
-    /// <summary>
-    /// For interaction system to toggle interact prompt on
-    /// </summary>
-    public void DisplayInteractUI()
-    {
-        if (_tabbedMenu != null && _canInteract)
-        {
-            _tabbedMenu.ToggleInteractPrompt(true, _interactPromptText);
-        }
-    }
-
-    /// <summary>
-    /// For interaction system to toggle interact prompt off
-    /// </summary>
-    public void HideInteractUI()
-    {
-        if (_tabbedMenu != null)
-        {
-            _tabbedMenu.ToggleInteractPrompt(false);
-        }
-    }
-
-    /// <summary>
-    /// Make wire end move to a position in front of the camera if the player
-    /// is interacting with this wire
-    /// </summary>
-    private void FixedUpdate()
-    {
-        if (_isInteracting)
-        {
-            Vector3 target = _cameraTrans.position + _cameraTrans.forward * _distanceFromPlayer;
-            _wireEndPosition.position = target;
-
-            if (Vector3.Distance(_wireEndPosition.position, _wireStartPosition.position) > _maxLength)
             {
                 OnDrop();
             }
@@ -199,11 +173,18 @@ public class MGWire : MonoBehaviour
     private void OnDrop()
     {
         _isInteracting = false;
-        _jackRb.isKinematic = true;
-        _jackRb.freezeRotation = false;
-        StopAllCoroutines();
-
-        PlaceWire();
+        
+        if (_currentSlot)
+        {
+            _jackRb.isKinematic = true;
+            StopAllCoroutines();
+            PlaceWire();
+        }
+        else
+        {
+            _jackRb.isKinematic = false;
+            _jackRb.freezeRotation = false;
+        }
     }
 
     /// <summary>
@@ -213,12 +194,11 @@ public class MGWire : MonoBehaviour
     /// <param name="slot"></param>
     public void EndTriggerEnter(MGWireSlot slot)
     {
-        _canConnectToSlot = true;
-        _currentSlot = slot;
-
-        // TODO: This is not a good spot to call PlaceWire(); Find a better
-        // solution where the placewire function properly "slots" the wire
-        OnDrop();
+        if (slot && !slot.ConnectedWire)
+        {
+            _canConnectToSlot = true;
+            _currentSlot = slot;
+        }
     }
     
     /// <summary>
@@ -227,7 +207,10 @@ public class MGWire : MonoBehaviour
     /// </summary>
     public void EndTriggerExit()
     {
-        _isCorrectlySlotted = false;
+        if (_currentSlot && _currentSlot.ConnectedWire && _currentSlot.ConnectedWire.Equals(this))
+        {
+            _currentSlot.RemoveWire();
+        }
         _canConnectToSlot = false;
         _currentSlot = null;
     }
@@ -239,8 +222,9 @@ public class MGWire : MonoBehaviour
     /// </summary>
     private void PlaceWire()
     {
-        if (_canConnectToSlot && _currentSlot && !_isCorrectlySlotted)
+        if (_canConnectToSlot && _currentSlot && !_currentSlot.IsConnected)
         {
+            _currentSlot.IsConnected = true;
             _isCorrectlySlotted = _currentSlot.CheckWire(this);
 
             // Prevents the moving of wires that are already in the right place
@@ -252,6 +236,7 @@ public class MGWire : MonoBehaviour
         else if (!_canConnectToSlot)
         {
             _jackRb.isKinematic = false;
+            _jackRb.freezeRotation = false;
         }
     }
 
@@ -280,5 +265,27 @@ public class MGWire : MonoBehaviour
         }
 
         return mat;
+    }
+    
+    /// <summary>
+    /// For interaction system to toggle interact prompt on
+    /// </summary>
+    public void DisplayInteractUI()
+    {
+        if (_tabbedMenu != null && _canInteract)
+        {
+            _tabbedMenu.ToggleInteractPrompt(true, _interactPromptText);
+        }
+    }
+
+    /// <summary>
+    /// For interaction system to toggle interact prompt off
+    /// </summary>
+    public void HideInteractUI()
+    {
+        if (_tabbedMenu != null)
+        {
+            _tabbedMenu.ToggleInteractPrompt(false);
+        }
     }
 }
