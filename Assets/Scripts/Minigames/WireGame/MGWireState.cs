@@ -43,7 +43,7 @@ public class MGWireState : MonoBehaviour
         //counts how many wires are connected
         foreach(MGWireSlot wireSlot in ListOfWireSlots)
         {
-            if(wireSlot.IsConnected)
+            if(wireSlot.IsCorrectWire)
             {
                 ++_currentAttachments;
             }

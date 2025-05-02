@@ -11,6 +11,7 @@ using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.AI;
 using PlaceboEntertainment.UI;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
 public abstract class BaseNpc : MonoBehaviour
@@ -219,7 +220,8 @@ public abstract class BaseNpc : MonoBehaviour
                 //im going off this post for achievements https://www.reddit.com/r/gamedev/comments/qphicd/does_anyone_have_experience_with_adding_steam/
                 //so the achivementID should just be the stringname
                 
-                SteamAchievements.Instance.UnlockSteamAchievement(currentResponse.AchievementName);
+                if(!SteamAchievements.Instance.IsUnityNull())
+                {SteamAchievements.Instance.UnlockSteamAchievement(currentResponse.AchievementName);}
             }
             
             // Checks if dialogue option should trigger an event

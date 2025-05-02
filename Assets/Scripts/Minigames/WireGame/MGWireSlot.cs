@@ -20,11 +20,15 @@ public class MGWireSlot : MonoBehaviour
     [SerializeField] private MeshRenderer _slotRenderer;
     [SerializeField] private Color _slotColor;
     [HideInInspector] public bool IsConnected;
+    [HideInInspector] public bool IsCorrectWire;
+    
 
     [Header("VFX Stuff")]
     [SerializeField] private ParticleSystem _connectSpark;
     [SerializeField] private ParticleSystem _disconnectedSparks;
 
+    [HideInInspector] public MGWire ConnectedWire;
+    
     /// <summary>
     /// Setting color of wire slot
     /// </summary>
@@ -37,11 +41,6 @@ public class MGWireSlot : MonoBehaviour
         robo.GetComponent<MGWireState>().ListOfWireSlots.Add(this);
     }
 
-    /*private void OnDrawGizmos()
-      {
-          Gizmos.DrawWireCube(transform.position, new Vector3(0.1f, 0.1f, 0.1f));
-      }*/
-
     /// <summary>
     /// Checks to see if the wire plaaced in the slot was the corrent wire
     /// </summary>
@@ -50,12 +49,12 @@ public class MGWireSlot : MonoBehaviour
     {
         Assert.IsNotNull(wire, "Make sure the object passed in is a " +
             "valid wire");
+        
+        ConnectedWire = wire;
 
-        IsConnected = false;
-
-        if(wire.WireID.Equals(_matchingWire))
+        if(wire.WireID ==_matchingWire)
         {
-            IsConnected = true;
+            IsCorrectWire = true;
             CorrectWire?.Invoke();
             _disconnectedSparks.Stop();
             _connectSpark.Play();
@@ -63,5 +62,19 @@ public class MGWireSlot : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void RemoveWire()
+    {
+        IsCorrectWire = false;
+        IsConnected = false;
+        
+        Debug.Log(ConnectedWire.name + " removed");
+        ConnectedWire = null;
+
+        if (!_disconnectedSparks.isPlaying)
+        {
+            _disconnectedSparks.Play();
+        }
     }
 }

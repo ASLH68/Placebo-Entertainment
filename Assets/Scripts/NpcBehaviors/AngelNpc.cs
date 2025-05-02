@@ -8,6 +8,7 @@
 *******************************************************************/
 
 using PlaceboEntertainment.UI;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AngelNpc : BaseNpc
@@ -46,7 +47,7 @@ public class AngelNpc : BaseNpc
     /// </summary>
     public void WinGame()
     {
-        if (TabbedMenu.TimeSpanSinceStart.TotalSeconds <= 60f * 8)
+        if (TabbedMenu.TimeSpanSinceStart.TotalSeconds <= 60f * 8 && !SteamAchievements.Instance.IsUnityNull())
         {
             SteamAchievements.Instance.UnlockSteamAchievement("SPEED_RUN");
         }

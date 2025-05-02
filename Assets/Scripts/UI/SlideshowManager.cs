@@ -53,7 +53,6 @@ public class SlideshowManager : MonoBehaviour
     private VisualElement _psMeter;
     private VisualElement _keyboardSkip;
     private VisualElement _keyboardMeter;
-
     public bool IsPlayingVideo;
 
     // 0 = keyboard, 1 = xbox, 2 = ps
@@ -83,21 +82,25 @@ public class SlideshowManager : MonoBehaviour
         _skipVideo.Enable();
         _controllerDetection.Enable();
         _mouseDetection.Enable();
-        
-        // Skip video on hold, pause on press
-        _skipVideo.performed +=
-            ctx =>
-            {
-                if (ctx.interaction is HoldInteraction)
-                    OnSkipVideo();
-                else // Could check for PressInteraction but easier to just assume it's a press.
-                    TogglePlayPause();
-            };
 
-        _skipVideo.started += ctx => DisplaySkipMeter(true);
-        _skipVideo.canceled += ctx => DisplaySkipMeter(false);
+        if (IsPlayingVideo)
+        {
+            // Skip video on hold, pause on press
+            _skipVideo.performed +=
+                ctx =>
+                {
+                    if (ctx.interaction is HoldInteraction)
+                        OnSkipVideo();
+                    else // Could check for PressInteraction but easier to just assume it's a press.
+                        TogglePlayPause();
+                };
 
-        _skipVideo.started += DetectInputType;
+            _skipVideo.started += ctx => DisplaySkipMeter(true);
+            _skipVideo.canceled += ctx => DisplaySkipMeter(false);
+
+            _skipVideo.started += DetectInputType;
+        }
+
         _controllerDetection.performed += DetectInputType;
         _mouseDetection.performed += DetectInputType;
         

@@ -9,21 +9,13 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 
 public class LoopController : MonoBehaviour
 {
-    //private Timer _loopTimer;
-    //[SerializeField] private string _loopTimerName;
-    //[SerializeField] private int _loopTimerTime;
-    //[SerializeField] private int _endScreenDelay;
-    //[SerializeField] private NpcEvent _temporaryLoop;
-    //[SerializeField] private NpcEventTags _temporaryTag;
-    //public int LoopTimerTimer => _loopTimerTime;
-    //public string LoopTimerName => _loopTimerName;
-
-    private List<Timer> _runningTimersAtStart = new List<Timer>();
-    private List<Timer> _pausedTimersAtStart= new List<Timer>();
+    private List<Timer> _runningTimersAtStart = new();
+    private List<Timer> _pausedTimersAtStart= new();
     [SerializeField] private float _endScreenDelay = 3f;
 
     private static bool _looped = false;
@@ -45,7 +37,7 @@ public class LoopController : MonoBehaviour
         //_loopTimer.TimesUp += HandleLoopTimerEnd;
         LoadSave();
         
-        if(_looped == true)
+        if(_looped)
         {
             PlayerController.Animator.SetTrigger("Reset");
         }
@@ -55,11 +47,7 @@ public class LoopController : MonoBehaviour
     /// </summary>
     private void HandleLoopTimerEnd()
     {
-        //TimerManager.Instance.RemoveTimer(LoopTimerName);
-
         ResetLoop();
-
-        //_loopTimer.TimesUp -= HandleLoopTimerEnd;
     }
     /// <summary>
     /// Saving, loading the new scene, loading saved data
@@ -79,7 +67,10 @@ public class LoopController : MonoBehaviour
         StartCoroutine(DelayLoadOfScene());
 
         //Place achievement "Die" here
-        SteamAchievements.Instance.UnlockSteamAchievement("DIE");
+        if (!SteamAchievements.Instance.IsUnityNull())
+        {
+            SteamAchievements.Instance.UnlockSteamAchievement("DIE");
+        }
     }
 
     IEnumerator DelayLoadOfScene()
