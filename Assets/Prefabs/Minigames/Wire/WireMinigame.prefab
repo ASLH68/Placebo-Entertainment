@@ -602,7 +602,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6920929870987060043}
-  - component: {fileID: 1883861451124457925}
   m_Layer: 0
   m_Name: WireMinigame
   m_TagString: Untagged
@@ -638,36 +637,6 @@ Transform:
   - {fileID: 7909823323482003671}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1883861451124457925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4799262412181857750}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a0acc881a336094997b0fb61c6d1983, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _eventsToListenFor:
-  - _npcEvent: {fileID: 11400000, guid: 8b7b5ccfabcfc4d4f96da8928978e41e, type: 2}
-    _npcEventTag: 5
-    _onEventTriggered:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
 --- !u!1 &4912033834744227518
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,7 +837,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5c50faf6ac8fd3e4a8aef3d9f45b8e85, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5c50faf6ac8fd3e4a8aef3d9f45b8e85, type: 3}
       propertyPath: m_LocalScale.x
@@ -1059,6 +1028,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6920929870987060043}
     m_Modifications:
+    - target: {fileID: 1999621104526795041, guid: 6b3307d40efb7164091f77507f18263c, type: 3}
+      propertyPath: _sphereScale
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1999621104526795041, guid: 6b3307d40efb7164091f77507f18263c, type: 3}
+      propertyPath: _totalLength
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1124965690766239317, guid: 72380e88db794ef4baecbf8f72bf09ef, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1190,14 +1167,6 @@ PrefabInstance:
     - target: {fileID: 6129717948067135492, guid: 72380e88db794ef4baecbf8f72bf09ef, type: 3}
       propertyPath: _interactColor.g
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1999621104526795041, guid: 6b3307d40efb7164091f77507f18263c, type: 3}
-      propertyPath: _sphereScale
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1999621104526795041, guid: 6b3307d40efb7164091f77507f18263c, type: 3}
-      propertyPath: _totalLength
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1555,6 +1524,26 @@ PrefabInstance:
       propertyPath: _connectSpark
       value: 
       objectReference: {fileID: 7771391800999653391}
+    - target: {fileID: 2173382007130028265, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: _slotRenderer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2440440824777930328, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.x
+      value: 3.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 2440440824777930328, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.y
+      value: 3.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 2440440824777930328, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.z
+      value: 3.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 2440440824777930328, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Center.y
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3410367222980154362, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
       propertyPath: m_Name
       value: WireSlots
@@ -1567,10 +1556,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slot 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4404687979127514185, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.x
+      value: 3.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404687979127514185, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.y
+      value: 3.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404687979127514185, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.z
+      value: 3.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 4404687979127514185, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Center.y
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 5056252246966136586, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
       propertyPath: _connectSpark
       value: 
       objectReference: {fileID: 7041175171977090224}
+    - target: {fileID: 5056252246966136586, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: _slotRenderer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5308765141976933707, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.154
@@ -1587,6 +1596,10 @@ PrefabInstance:
       propertyPath: _connectSpark
       value: 
       objectReference: {fileID: 6468707355267121358}
+    - target: {fileID: 6545351765175581979, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: _slotRenderer
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6716173009582213883, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
       propertyPath: m_Name
       value: Slot 1
@@ -1595,10 +1608,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slot 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7287551712021066666, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.x
+      value: 3.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287551712021066666, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.y
+      value: 3.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287551712021066666, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Size.z
+      value: 3.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 7287551712021066666, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+      propertyPath: m_Center.y
+      value: 0.2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7169876123658479179, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
     - {fileID: 1426064982619322090, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6802969694972752388, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+    - {fileID: 4798489219736723477, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
+    - {fileID: 462477879389922791, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c51a393c8d0d671498fc65ccc1893dff, type: 3}

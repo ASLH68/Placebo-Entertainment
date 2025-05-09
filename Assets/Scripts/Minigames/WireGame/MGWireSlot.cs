@@ -17,7 +17,6 @@ public class MGWireSlot : MonoBehaviour
     public static Action CorrectWire;
 
     [SerializeField] private MGWire.EWireID _matchingWire;
-    [SerializeField] private MeshRenderer _slotRenderer;
     [SerializeField] private Color _slotColor;
     [HideInInspector] public bool IsConnected;
     [HideInInspector] public bool IsCorrectWire;
@@ -34,8 +33,6 @@ public class MGWireSlot : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        _slotRenderer.material.color = _slotColor;
-
         //Adds To Slot List in Wire State Script
         GameObject robo = GameObject.FindWithTag("WireManager");
         robo.GetComponent<MGWireState>().ListOfWireSlots.Add(this);
