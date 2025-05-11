@@ -17,7 +17,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &4926381424550012649
 Transform:
@@ -54,7 +54,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -123,9 +123,17 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 835342208645068262, guid: 0eacfb7efde62e749831140f8710c38e, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4420555035905671862, guid: 0eacfb7efde62e749831140f8710c38e, type: 3}
       propertyPath: m_Name
       value: Normal Light (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4420555035905671862, guid: 0eacfb7efde62e749831140f8710c38e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9216518817143763428, guid: 0eacfb7efde62e749831140f8710c38e, type: 3}
       propertyPath: m_LocalScale.x

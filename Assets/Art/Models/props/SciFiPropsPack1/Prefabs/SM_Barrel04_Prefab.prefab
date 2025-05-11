@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Barrel04_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: d6b2d5db0c4c9e143b9f0a052db77e5a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d6b2d5db0c4c9e143b9f0a052db77e5a, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -55,6 +59,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: d6b2d5db0c4c9e143b9f0a052db77e5a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: d6b2d5db0c4c9e143b9f0a052db77e5a, type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

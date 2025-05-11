@@ -97,3 +97,5 @@ fmod_editor.log
 /[Pp]rojectSettings/Packages/com.unity.probuilder/Settings.json
 /[Pp]rojectSettings/Packages/com.unity.testtools.codecoverage/Settings.json
 /[Aa]ssets/Plugins/FMOD/Cache/Editor/
+workspace.xml
+.idea

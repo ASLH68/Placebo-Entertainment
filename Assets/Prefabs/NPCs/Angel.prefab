@@ -138,6 +138,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: b0ff38f0f20db8a4ab04033934de185c, type: 2}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: What happened?
         _nextResponseIndex: 01000000
         _advancesNpcState: 0
@@ -145,6 +146,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 1
+        _achievementName: 
         _answer: This should help.
         _nextResponseIndex: 0300000004000000
         _advancesNpcState: 0
@@ -163,6 +165,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 02000000
         _advancesNpcState: 0
@@ -181,6 +184,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -198,6 +202,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -216,6 +221,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -234,6 +240,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: b0ff38f0f20db8a4ab04033934de185c, type: 2}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: What happened?
         _nextResponseIndex: 01000000
         _advancesNpcState: 0
@@ -241,6 +248,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 1
+        _achievementName: 
         _answer: This should help.
         _nextResponseIndex: 0300000004000000
         _advancesNpcState: 0
@@ -259,6 +267,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 02000000
         _advancesNpcState: 0
@@ -277,6 +286,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -294,6 +304,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -312,6 +323,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -331,6 +343,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: fc8258980d4d13341abe42a88ac6fdb6, type: 2}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Safe and sound.
         _nextResponseIndex: 01000000
         _advancesNpcState: 0
@@ -348,6 +361,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 02000000
         _advancesNpcState: 0
@@ -366,6 +380,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 03000000
         _advancesNpcState: 0
@@ -385,6 +400,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 04000000
         _advancesNpcState: 0
@@ -402,6 +418,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 05000000
         _advancesNpcState: 0
@@ -421,6 +438,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 06000000
         _advancesNpcState: 0
@@ -438,6 +456,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: FIND_BEYOND_MARION
         _answer: Proceed further.
         _nextResponseIndex: 07000000
         _advancesNpcState: 0
@@ -445,6 +464,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: LEAVE_MARION
         _answer: Return home.
         _nextResponseIndex: 0b000000
         _advancesNpcState: 0
@@ -462,6 +482,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 08000000
         _advancesNpcState: 0
@@ -479,6 +500,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 09000000
         _advancesNpcState: 0
@@ -496,6 +518,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 0a000000
         _advancesNpcState: 0
@@ -513,6 +536,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: 79af595eb319158438b5f3a5e1ebd488, type: 2}
         _eventTag: 3
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Proceed
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -530,6 +554,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 0c000000
         _advancesNpcState: 0
@@ -547,6 +572,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 0d000000
         _advancesNpcState: 0
@@ -564,6 +590,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 0e000000
         _advancesNpcState: 0
@@ -581,6 +608,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: 568815febe15e9b47930ec0d4002cfd1, type: 2}
         _eventTag: 3
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Return
         _nextResponseIndex: 
         _advancesNpcState: 0

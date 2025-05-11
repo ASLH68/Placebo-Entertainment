@@ -13,11 +13,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using Unity.VisualScripting;
 using Utils;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance;
+    [SerializeField] bool _isOnMainMenu = false;
     [SerializeField] float _moveSpeed;
     [SerializeField] float _jumpForce;
     [Header("Audio")]
@@ -26,6 +28,13 @@ public class PlayerController : MonoBehaviour
     [Header("VFX")]
     [SerializeField] private ParticleSystem _footPrints;
     private ParticleSystem.EmissionModule _footPrintEmission;
+
+    [SerializeField] public Texture2D[] _psControllerUI;
+    [SerializeField] public Texture2D[] _xboxControllerUI;
+    
+    //code specifically for the "The other company" achievement
+    private float _animatorIdleTime;
+    private bool _idleAchievementNeeded = true;
 
     //Anim Controller
     public static Animator Animator { get; private set; }
@@ -79,6 +88,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerControls = new PlayerControls();
         PlayerControls.BasicControls.Enable();
+        PlayerControls.UI.Enable();
 
         InteractionCheck = new PlayerInteractSystem("Default None");
         _doOnce = true;
@@ -116,6 +126,21 @@ public class PlayerController : MonoBehaviour
             
             //Starts Walking Anim
             Animator.SetFloat("Speed", _velocity.magnitude);
+            
+            //Code specifically for the "The other company" achievement
+            if(_idleAchievementNeeded)
+            ++_animatorIdleTime;
+
+        }
+
+        if (_animatorIdleTime > 24 && _idleAchievementNeeded)
+        {
+            //Put "The other company" achievement here and also a way to save the achievement then use in the if statement if null so it doesn't keep giving the achievement
+            if (!SteamAchievements.Instance.IsUnityNull())
+            {
+                SteamAchievements.Instance.UnlockSteamAchievement("COMPANY");
+                _idleAchievementNeeded = false; 
+            }
         }
         if(_isKinemat)
         {
@@ -130,7 +155,7 @@ public class PlayerController : MonoBehaviour
         if (!_isGrounded)
             _isGrounded = Physics.CheckSphere(_groundChecker.position, _groundedDistance, _groundMask);
 
-        if (Interact.IsPressed() && _doOnce == true)
+        if (Interact.IsPressed() && _doOnce)
         {
             InteractionCheck.CallInteract();
         }

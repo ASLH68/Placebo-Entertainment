@@ -13,12 +13,16 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using PlaceboEntertainment.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.Users;
 
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private UIDocument _pauseMenu;
     [SerializeField] private float _tabAnimationTime = 0.25f;
     [SerializeField] private EventReference confirmEvent;
+    [SerializeField] private Texture2D _xboxBack;
+    [SerializeField] private Texture2D _psBack;
 
     #region Constants
     private const string ContinueButtonName = "ContinueButton";
@@ -37,11 +41,25 @@ public class PauseMenu : MonoBehaviour
     private const string TopTabName = "TopTab";
     private const string MiddleTabName = "MiddleTab";
     private const string BottomTabName = "BottomTab";
+    private const string EscapeButtonName = "Button";
+    private const string AudioBackPrompt = "AudioBackPrompt";
+    private const string ControlsBackPrompt = "ControlsBackPrompt";
+    private const string PauseBackPrompt = "PauseBackPrompt";
+    private const string SettingsBackPrompt = "SettingsBackPrompt";
+    private const string ControllerAudioBackPrompt = "ControllerAudioBackPrompt";
+    private const string ControllerControlsBackPrompt = "ControllerControlsBackPrompt";
+    private const string ControllerSettingsBackPrompt = "ControllerSettingsBackPrompt";
+    private const string ControllerPauseBackPrompt = "ControllerPauseBackPrompt";
+    private const string ControllerAudioInput = "ControllerAudioBackInput";
+    private const string ControllerControlsInput = "ControllerControlsBackInput";
+    private const string ControllerSelectionInput = "ControllerSettingsBackInput";
+    private const string ControllerPauseBackInput = "ControllerPauseBackInput";
     #endregion
 
     #region Private
     private TabbedMenu _tabbedMenu;
     private Button _continueButton;
+    private Label _escapeButton;
     private Button _settingsButton;
     private Button _exitButton;
     private Button _audioButton;
@@ -61,10 +79,29 @@ public class PauseMenu : MonoBehaviour
     private SettingsManager _settingsManager;
     private Coroutine _activeCoroutine;
     private UQueryBuilder<Button> _allButtons;
+    private Label _controllerPauseBackInput;
+    private Label _controllerSettingsBackInput;
+    private Label _controllerAudioBackInput;
+    private Label _controllerControlsBackInput;
+    private VisualElement _audioBackPrompt;
+    private VisualElement _controlsBackPrompt;
+    private VisualElement _pauseBackPrompt;
+    private VisualElement _settingsBackPrompt;
+    private VisualElement _controllerAudioBackPrompt;
+    private VisualElement _controllerControlsBackPrompt;
+    private VisualElement _controllerSettingsBackPrompt;
+    private VisualElement _controllerPauseBackPrompt;
+
+    private GameObject _lastFocusedElement;
+    private Button _lastFocusedVisualElement;
 
     private List<Slider> _sliders = new List<Slider>();
     // 0 = pause, 1 = settings selection, 2 = settings submenu
     private int _currentScreenIndex = 0;
+
+    private bool _isFocused = false;
+    // 0 = MnK, 1 = Xbox, 2 = PS 
+    private int _inputDeviceType = 0;
     #endregion
 
     /// <summary>
@@ -80,6 +117,7 @@ public class PauseMenu : MonoBehaviour
         _exitButton = _pauseMenu.rootVisualElement.Q<Button>(ExitButtonName);
         _audioButton = _pauseMenu.rootVisualElement.Q<Button>(AudioButtonName);
         _controlsButton = _pauseMenu.rootVisualElement.Q<Button>(ControlsButtonName);
+        _escapeButton = _pauseMenu.rootVisualElement.Q<Label>(EscapeButtonName);
 
         // Getting references to screen holders
         _pauseHolder = _pauseMenu.rootVisualElement.Q(PauseHolderName);
@@ -98,12 +136,38 @@ public class PauseMenu : MonoBehaviour
         _middleTab = _pauseMenu.rootVisualElement.Q(MiddleTabName);
         _bottomTab = _pauseMenu.rootVisualElement.Q(BottomTabName);
 
+        // Assigning button prompt references
+        _controllerAudioBackInput = _pauseMenu.rootVisualElement.Q<Label>(ControllerAudioInput);
+        _controllerControlsBackInput = _pauseMenu.rootVisualElement.Q<Label>(ControllerControlsInput);
+        _controllerSettingsBackInput =  _pauseMenu.rootVisualElement.Q<Label>(ControllerSelectionInput);
+        _controllerPauseBackInput = _pauseMenu.rootVisualElement.Q<Label>(ControllerPauseBackInput);
+        _audioBackPrompt = _pauseMenu.rootVisualElement.Q(AudioBackPrompt);
+        _controlsBackPrompt = _pauseMenu.rootVisualElement.Q(ControlsBackPrompt);
+        _pauseBackPrompt = _pauseMenu.rootVisualElement.Q(PauseBackPrompt);
+        _settingsBackPrompt = _pauseMenu.rootVisualElement.Q(SettingsBackPrompt);
+        _controllerAudioBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerAudioBackPrompt);
+        _controllerControlsBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerControlsBackPrompt);
+        _controllerSettingsBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerSettingsBackPrompt);
+        _controllerPauseBackPrompt = _pauseMenu.rootVisualElement.Q(ControllerPauseBackPrompt);
+
         // Registering button callbacks
-        _continueButton.RegisterCallback<ClickEvent>(ContinuePressed);
-        _settingsButton.RegisterCallback<ClickEvent>(SettingsButtonClicked);
-        _audioButton.RegisterCallback<ClickEvent>(AudioButtonClicked);
-        _controlsButton.RegisterCallback<ClickEvent>(ControlsButtonClicked);
-        _exitButton.RegisterCallback<ClickEvent>(ExitToMenu);
+        _continueButton.RegisterCallback<NavigationSubmitEvent>(ContinuePressed);
+        _settingsButton.RegisterCallback<NavigationSubmitEvent>(SettingsButtonClicked);
+        _audioButton.RegisterCallback<NavigationSubmitEvent>(AudioButtonClicked);
+        _controlsButton.RegisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
+        _exitButton.RegisterCallback<NavigationSubmitEvent>(ExitToMenu);
+
+        _continueButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
+        _audioButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
+        _controlsButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_controlsButton); });
+        _settingsButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_settingsButton); });
+        _exitButton.RegisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_exitButton); });
+
+        _continueButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _audioButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _controlsButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _settingsButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _exitButton.RegisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
 
         // Registering animated tab related callbacks
         _continueButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_topTab, true); });
@@ -116,11 +180,22 @@ public class PauseMenu : MonoBehaviour
         _settingsButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_middleTab, false); });
         _exitButton.RegisterCallback<MouseOverEvent>(evt => { AnimateTab(_bottomTab, true); });
         _exitButton.RegisterCallback<MouseOutEvent>(evt => { AnimateTab(_bottomTab, false); });
-        
+
+        _continueButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _continueButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _audioButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _audioButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _controlsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _controlsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _settingsButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _settingsButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _exitButton.RegisterCallback<FocusInEvent>(evt => { AnimateTab(_bottomTab, true); });
+        _exitButton.RegisterCallback<FocusOutEvent>(evt => { AnimateTab(_bottomTab, false); });
+
         _allButtons = _pauseMenu.rootVisualElement.Query<Button>();
         _allButtons.ForEach(button =>
         {
-            button.RegisterCallback<ClickEvent>(PlayConfirmSound);
+            button.RegisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
         });
 
         if (_tabAnimationTime <= 0)
@@ -136,9 +211,16 @@ public class PauseMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.getParameterByName("MusicVolume", out volume);
         _sliders[2].value = volume;
         _sliders[2].RegisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.RegisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
-    private void PlayConfirmSound(ClickEvent evt)
+    private void PlayConfirmSound(NavigationSubmitEvent evt)
     {
         AudioManager.PlaySound(confirmEvent, transform.position);
     }
@@ -149,7 +231,14 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         PlayerController.Instance.PlayerControls.BasicControls.PauseGame.performed += PauseGamePerformed;
+        PlayerController.Instance.PlayerControls.UI.Cancel.performed += ctx => PerformBackInput();
         _tabbedMenu = TabbedMenu.Instance;
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += ctx => ControllerUsed();
+
+        // New input detection
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed += DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Point.performed += DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Navigate.performed += DetectInputType;
 
         _settingsManager = SettingsManager.Instance;
         if (_settingsManager != null)
@@ -166,17 +255,36 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        PlayerController.Instance.PlayerControls.UI.Cancel.performed -= ctx => PerformBackInput();
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= ctx => ControllerUsed();
+        PlayerController.Instance.PlayerControls.UI.ControllerDetection.performed -= DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Point.performed -= DetectInputType;
+        PlayerController.Instance.PlayerControls.UI.Navigate.performed -= DetectInputType;
+
         // Unregistering button callbacks
-        _continueButton.UnregisterCallback<ClickEvent>(ContinuePressed);
-        _settingsButton.UnregisterCallback<ClickEvent>(SettingsButtonClicked);
-        _audioButton.UnregisterCallback<ClickEvent>(AudioButtonClicked);
-        _controlsButton.UnregisterCallback<ClickEvent>(ControlsButtonClicked);
-        _exitButton.UnregisterCallback<ClickEvent>(ExitToMenu);
-        _exitButton.UnregisterCallback<ClickEvent>(PlayConfirmSound);
+        _continueButton.UnregisterCallback<NavigationSubmitEvent>(ContinuePressed);
+        _settingsButton.UnregisterCallback<NavigationSubmitEvent>(SettingsButtonClicked);
+        _audioButton.UnregisterCallback<NavigationSubmitEvent>(AudioButtonClicked);
+        _controlsButton.UnregisterCallback<NavigationSubmitEvent>(ControlsButtonClicked);
+        _exitButton.UnregisterCallback<NavigationSubmitEvent>(ExitToMenu);
+        _exitButton.UnregisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
         
+
+        _continueButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_continueButton); });
+        _audioButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_audioButton); });
+        _controlsButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_controlsButton); });
+        _settingsButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_settingsButton); });
+        _exitButton.UnregisterCallback<MouseOverEvent>(evt => { ChangeButtonFocus(_exitButton); });
+
+        _continueButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _audioButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _controlsButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _settingsButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+        _exitButton.UnregisterCallback<MouseOutEvent>(evt => { ClearButtonFocus(); });
+
         _allButtons.ForEach(button =>
         {
-            button.UnregisterCallback<ClickEvent>(PlayConfirmSound);
+            button.UnregisterCallback<NavigationSubmitEvent>(PlayConfirmSound);
         });
         
         // Unregistering animated tab related callbacks
@@ -191,10 +299,28 @@ public class PauseMenu : MonoBehaviour
         _exitButton.UnregisterCallback<MouseOverEvent>(evt => { AnimateTab(_bottomTab, true); });
         _exitButton.UnregisterCallback<MouseOutEvent>(evt => { AnimateTab(_bottomTab, false); });
 
+        _continueButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _continueButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _audioButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_topTab, true); });
+        _audioButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_topTab, false); });
+        _controlsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _controlsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _settingsButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_middleTab, true); });
+        _settingsButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_middleTab, false); });
+        _exitButton.UnregisterCallback<FocusInEvent>(evt => { AnimateTab(_bottomTab, true); });
+        _exitButton.UnregisterCallback<FocusOutEvent>(evt => { AnimateTab(_bottomTab, false); });
+
         PlayerController.Instance.PlayerControls.BasicControls.PauseGame.performed -= PauseGamePerformed;
         _sliders[0].UnregisterCallback<ChangeEvent<float>>(MasterAudioSliderChanged);
         _sliders[1].UnregisterCallback<ChangeEvent<float>>(SFXAudioSliderChanged);
         _sliders[2].UnregisterCallback<ChangeEvent<float>>(MusicAudioSliderChanged);
+
+        foreach (var slider in _sliders)
+        {
+            slider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(slider, evt.direction));
+        }
+
+        _mouseSensSlider.UnregisterCallback<NavigationMoveEvent>(evt => UpdateSliderWithEvent(_mouseSensSlider, evt.direction));
     }
 
     /// <summary>
@@ -204,6 +330,28 @@ public class PauseMenu : MonoBehaviour
     public void TogglePauseMenu(bool isActive)
     {
         _isGamePaused = isActive;
+
+        if (isActive)
+        {
+            _continueButton.Focus();
+            //PC UI override
+            if (PlayerController.Instance.PlayerControls.BasicControls.Look.triggered)
+            {
+                _escapeButton.text = "Esc";
+            }
+            //PlayStation UI override
+            if (PlayerController.Instance.PlayerControls.BasicControls.PlaystationDetection.triggered)
+            {
+                _escapeButton.text = "";
+                _escapeButton.style.backgroundImage = PlayerController.Instance._psControllerUI[1];
+            }
+            //Xbox UI override
+            if (PlayerController.Instance.PlayerControls.BasicControls.XboxDetection.triggered)
+            {
+                _escapeButton.text = "";
+                _escapeButton.style.backgroundImage = PlayerController.Instance._xboxControllerUI[1];
+            }
+        }
         
         // Ensures mouse is still visible when pausing during dialogue
         if (_tabbedMenu != null && _tabbedMenu.DialogueVisible)
@@ -218,6 +366,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         _pauseMenu.rootVisualElement.style.display = isActive ? DisplayStyle.Flex : DisplayStyle.None;
+        UpdateInputPrompts();
         Time.timeScale = isActive ? 0 : 1;
     }
 
@@ -238,12 +387,22 @@ public class PauseMenu : MonoBehaviour
         {
             TogglePauseMenu(false);
         }
+        // Return to previous pause screen from a settings screen
+        else
+        {
+            PerformBackInput();
+        }
+    }
+    
+    private void PerformBackInput()
+    {
         // Return to main pause screen from settings selection
-        else if (_currentScreenIndex == 1)
+        if (_currentScreenIndex == 1)
         {
             _currentScreenIndex = 0;
             _selectionHolder.style.display = DisplayStyle.None;
             _pauseHolder.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
         }
         // Return to settings selection from settings submenu
         else if (_currentScreenIndex == 2)
@@ -257,14 +416,58 @@ public class PauseMenu : MonoBehaviour
             _audioHolder.style.display = DisplayStyle.None;
             _controlsHolder.style.display = DisplayStyle.None;
             _selectionHolder.style.display = DisplayStyle.Flex;
+            UpdateInputPrompts();
+        }
+    }
+
+    /// <summary>
+    /// Called when mouse leaves a button
+    /// </summary>
+    private void ClearButtonFocus()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        _isFocused = false;
+    }
+
+    /// <summary>
+    /// Called when the mouse hovers over a button after using a controller
+    /// to change what button is focused
+    /// </summary>
+    private void ChangeButtonFocus(Button buttonToFocus)
+    {
+        buttonToFocus.Focus();
+        _lastFocusedVisualElement = buttonToFocus;
+    }
+
+    /// <summary>
+    /// When a controller is used and the game isn't focused on something,
+    /// focus on a button
+    /// </summary>
+    private void ControllerUsed()
+    {
+        if (_isFocused) { return; }
+
+        _isFocused = true;
+
+        if (_lastFocusedVisualElement != null)
+        {
+            _lastFocusedVisualElement.Focus();
+        }
+        else if (_currentScreenIndex == 0)
+        {
+            _continueButton.Focus();
+        }
+        else if (_currentScreenIndex == 1)
+        {
+            _audioButton.Focus();
         }
     }
 
     /// <summary>
     /// Invoked when continue button is pressed to disable menu
     /// </summary>
-    /// <param name="click">ClickEvent from button</param>
-    private void ContinuePressed(ClickEvent click)
+    /// <param name="click">NavigationSubmitEvent from button</param>
+    private void ContinuePressed(NavigationSubmitEvent click)
     {
         TogglePauseMenu(false);
     }
@@ -273,18 +476,19 @@ public class PauseMenu : MonoBehaviour
     /// Opens settings selection menu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void SettingsButtonClicked(ClickEvent clicked)
+    private void SettingsButtonClicked(NavigationSubmitEvent clicked)
     {
         _currentScreenIndex = 1;
         _pauseHolder.style.display = DisplayStyle.None;
         _selectionHolder.style.display = DisplayStyle.Flex;
+        UpdateInputPrompts();
     }
 
     /// <summary>
     /// Opens audio options submenu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void AudioButtonClicked(ClickEvent clicked)
+    private void AudioButtonClicked(NavigationSubmitEvent clicked)
     {
         _currentScreenIndex = 2;
         if (_settingsManager != null)
@@ -295,13 +499,14 @@ public class PauseMenu : MonoBehaviour
         }
         _selectionHolder.style.display = DisplayStyle.None;
         _audioHolder.style.display = DisplayStyle.Flex;
+        UpdateInputPrompts();
     }
 
     /// <summary>
     /// Opens controls options submenu
     /// </summary>
     /// <param name="clicked">Click event</param>
-    private void ControlsButtonClicked(ClickEvent clicked)
+    private void ControlsButtonClicked(NavigationSubmitEvent clicked)
     {
         _currentScreenIndex = 2;
         if (_settingsManager != null)
@@ -310,13 +515,14 @@ public class PauseMenu : MonoBehaviour
         }
         _selectionHolder.style.display = DisplayStyle.None;
         _controlsHolder.style.display = DisplayStyle.Flex;
+        UpdateInputPrompts();
     }
 
     /// <summary>
     /// Invoked when main menu button is pressed to load that scene
     /// </summary>
-    /// <param name="click">ClickEvent from button</param>
-    private void ExitToMenu(ClickEvent click)
+    /// <param name="click">NavigationSubmitEvent from button</param>
+    private void ExitToMenu(NavigationSubmitEvent click)
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
@@ -390,4 +596,82 @@ public class PauseMenu : MonoBehaviour
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("MusicVolume", newVolume);
     }
     #endregion
+
+    /// <summary>
+    /// Moves the sliders more smoothly when using a controller
+    /// </summary>
+    /// <param name="selectedSlider">Slider to move</param>
+    /// <param name="direction">Direction to move the slider</param>
+    private void UpdateSliderWithEvent(Slider selectedSlider, NavigationMoveEvent.Direction direction)
+    {
+        float multiplier = direction == NavigationMoveEvent.Direction.Left ? -1f :
+            direction == NavigationMoveEvent.Direction.Right ? 1f : 0f;
+        selectedSlider.value += 2.5f * multiplier;
+    }
+
+    /// <summary>
+    /// Called to determine what type of input device is being used
+    /// </summary>
+    /// <param name="context">Input context</param>
+    private void DetectInputType(InputAction.CallbackContext context)
+    {
+        string controlName = context.control.device.displayName.ToLower();
+        int newInputDevice;
+
+        if (controlName.Contains("xbox"))
+        {
+            newInputDevice = 1;
+        }
+        else if (controlName.Contains("playstation") ||
+            controlName.Contains("dualsense") || controlName.Contains("dualshock"))
+        {
+            newInputDevice = 2;
+        }
+        else
+        {
+            newInputDevice = 0;
+        }
+
+        if (newInputDevice == _inputDeviceType) { return; }
+
+        _inputDeviceType = newInputDevice;
+        UpdateInputPrompts();
+    }
+
+    /// <summary>
+    /// Changes input prompts when the device type changes
+    /// </summary>
+    private void UpdateInputPrompts()
+    {
+        if (_currentScreenIndex == 0)
+        {
+            _pauseBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerPauseBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        else if (_currentScreenIndex == 1)
+        {
+            _settingsBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerSettingsBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        else if (_currentScreenIndex == 2)
+        {
+            _audioBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controlsBackPrompt.style.display = _inputDeviceType == 0 ? DisplayStyle.Flex : DisplayStyle.None;
+
+            _controllerAudioBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+            _controllerControlsBackPrompt.style.display = _inputDeviceType != 0 ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        if (_inputDeviceType == 0)
+        {
+            UnityEngine.Cursor.visible = true;
+            return;
+        }
+
+        UnityEngine.Cursor.visible = false;
+
+        _controllerAudioBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerControlsBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+        _controllerSettingsBackInput.style.backgroundImage = _inputDeviceType == 1 ? _xboxBack : _psBack;
+    }
 }

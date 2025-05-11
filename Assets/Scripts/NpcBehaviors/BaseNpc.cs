@@ -11,6 +11,7 @@ using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.AI;
 using PlaceboEntertainment.UI;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
 public abstract class BaseNpc : MonoBehaviour
@@ -84,6 +85,7 @@ public abstract class BaseNpc : MonoBehaviour
         [SerializeField] private NpcEvent _eventToTrigger;
         [SerializeField] private NpcEventTags _eventTag;
         [SerializeField] private bool _hasPrerequisiteCheck;
+        [SerializeField] private string _achievementName;
         [SerializeField] private string _answer;
         [SerializeField] private int[] _nextResponseIndex;
         [SerializeField] private bool _advancesNpcState;
@@ -96,6 +98,7 @@ public abstract class BaseNpc : MonoBehaviour
         public int[] NextResponseIndex { get => _nextResponseIndex; }
         public bool AdvancesNpcState { get => _advancesNpcState; }
         public bool EndsDialogue { get => _endsDialogue; }
+        public string AchievementName { get => _achievementName; }
     }
     #endregion
 
@@ -208,6 +211,19 @@ public abstract class BaseNpc : MonoBehaviour
                 currentResponse = currentNode.PlayerResponses[0];
             }
 
+            if (currentResponse.AchievementName != null)
+            {
+                //I added a new dialogue response parameter for
+                //Achievements just add for both "Pet the dog(Odon)" and "Listen to a good story (Silas' story)"
+                //To do it just go to the dialogue response after or during and add the achievement name
+                //After adding the achievement name (idk how you plan on adding achievements) just add the general code here
+                //im going off this post for achievements https://www.reddit.com/r/gamedev/comments/qphicd/does_anyone_have_experience_with_adding_steam/
+                //so the achivementID should just be the stringname
+                
+                if(!SteamAchievements.Instance.IsUnityNull())
+                {SteamAchievements.Instance.UnlockSteamAchievement(currentResponse.AchievementName);}
+            }
+            
             // Checks if dialogue option should trigger an event
             if (currentResponse.EventToTrigger != null)
             {

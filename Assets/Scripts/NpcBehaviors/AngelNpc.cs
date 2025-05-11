@@ -6,6 +6,9 @@
 *                 Currently set up for the first playable, will need to be updated
 *                 for future milestones with more features.
 *******************************************************************/
+
+using PlaceboEntertainment.UI;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AngelNpc : BaseNpc
@@ -15,24 +18,6 @@ public class AngelNpc : BaseNpc
     private bool _robotGameComplete = false;
     private bool _cowardGameComplete = false;
     private bool _isPostMinigameState = false;
-
-    /// <summary>
-    /// Used in first playable for knowing if the robot game is complete
-    /// done
-    /// </summary>
-    public void RobotMinigameCompleted()
-    {
-        _robotGameComplete = true;
-    }
-
-    /// <summary>
-    /// Used in first playable for knowing if the coward game is complete
-    /// done
-    /// </summary>
-    public void CowardMinigameCompleted()
-    {
-        _cowardGameComplete = true;
-    }
 
     public override void CheckForStateChange()
     {
@@ -62,6 +47,11 @@ public class AngelNpc : BaseNpc
     /// </summary>
     public void WinGame()
     {
+        if (TabbedMenu.TimeSpanSinceStart.TotalSeconds <= 60f * 8 && !SteamAchievements.Instance.IsUnityNull())
+        {
+            SteamAchievements.Instance.UnlockSteamAchievement("SPEED_RUN");
+        }
+        
         _tabbedMenu.ToggleWin(true);
     }
 

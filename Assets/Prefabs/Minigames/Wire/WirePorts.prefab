@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6835942184799389089}
   - component: {fileID: 1594848078761885326}
   - component: {fileID: 4229860713869023055}
+  - component: {fileID: 6307710845762033219}
   m_Layer: 0
   m_Name: WirePorts
   m_TagString: Untagged
@@ -64,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f83630130b1a8f948b9089df257014ab, type: 2}
+  - {fileID: 2100000, guid: 313c6f47aa8f6434c9efed08152e0af9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,6 +87,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6307710845762033219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8000495540909241637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 809c6cb2f8aa0a5498565087bd4db71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screen: {fileID: 2100000, guid: f83630130b1a8f948b9089df257014ab, type: 2}
 --- !u!1001 &721300680474565533
 PrefabInstance:
   m_ObjectHideFlags: 0

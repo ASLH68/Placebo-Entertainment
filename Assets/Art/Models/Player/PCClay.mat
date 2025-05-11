@@ -79,22 +79,22 @@ Material:
     m_Ints: []
     m_Floats:
     - _AO_Depth: 1
-    - _Dimple_Displace_Intensity: 0.1
-    - _Dimple_Normal_Intensity: 1
-    - _Dimple_Tiling: 20
-    - _FPS: 2
+    - _Dimple_Displace_Intensity: 10
+    - _Dimple_Normal_Intensity: 0.5
+    - _Dimple_Tiling: 2
+    - _FPS: 4
     - _Fingerprint_Intensity: 1
     - _Fingerprint_Tiling: 1
-    - _Macro_Noise_Contrast: 1
+    - _Macro_Noise_Contrast: 2
     - _Macro_Noise_Scale: 10
     - _Macro_Noise_Strength: 0.1
-    - _Main_Texture_Tiling: 2
-    - _Normal_Strength: 1
+    - _Main_Texture_Tiling: 1
+    - _Normal_Strength: 0.5
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Roughness_Intensity: 1.75
-    - _Subsurface_Radius: 1
+    - _Subsurface_Radius: 0
     m_Colors:
     - _Base_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Subsurface_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Subsurface_Color: {r: 0.014531243, g: 0.008232466, b: 0.047169805, a: 0}
   m_BuildTextureStacks: []

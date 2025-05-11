@@ -38,10 +38,18 @@ public class MGWire : MonoBehaviour
     [SerializeField] private GameObject _avcCable;
     [SerializeField] private GameObject _avcJack;
 
+    [SerializeField] private GameObject _wireJack;
+
+    [SerializeField] float _totalWeight = 10f;
+
+    [SerializeField] float _drag = 1f;
+    [SerializeField] float _angularDrag = 1f;
+
+    [SerializeField] bool _usePhysics = false;
+
     private bool _canConnectToSlot = false;
 
     private MGWireSlot _currentSlot = null;
-    private MGWireMovement _mgWireMovement;
     private bool _isCorrectlySlotted = false;
 
     private bool _isInteracting = false;
@@ -50,6 +58,8 @@ public class MGWire : MonoBehaviour
     private TabbedMenu _tabbedMenu;
     private bool _minigameStarted = false;
 
+    private Rigidbody _jackRb;
+
     public enum EWireID
     {
         ONE, TWO, THREE, FOUR
@@ -57,13 +67,30 @@ public class MGWire : MonoBehaviour
 
     private void Start()
     {
-        if (TryGetComponent<MGWireMovement>(out MGWireMovement wireMove))
-        {
-            _mgWireMovement = wireMove;
-        }
+        if (_wireJack != null)
+            _wireJack.GetComponent<Renderer>().material = GetJackColor();
 
         _tabbedMenu = TabbedMenu.Instance;
         _cameraTrans = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+
+        _jackRb = _wireJack.GetComponent<Rigidbody>();
+        _jackRb.isKinematic = false;
+        _jackRb.mass = _totalWeight;
+        _jackRb.drag = _drag;
+        _jackRb.angularDrag = _angularDrag;
+    }
+    
+    /// <summary>
+    /// Make wire end move to a position in front of the camera if the player
+    /// is interacting with this wire
+    /// </summary>
+    private void FixedUpdate()
+    {
+        if (_isInteracting)
+        {
+            Vector3 target = _cameraTrans.position + _cameraTrans.forward * _distanceFromPlayer;
+            _wireEndPosition.position = target;
+        }
     }
 
     /// <summary>
@@ -96,51 +123,12 @@ public class MGWire : MonoBehaviour
         if (_minigameStarted && _canInteract)
         {
             AudioManager.PlaySound(wireGrabEvent, transform.position);
+            
             if (!_isInteracting)
             {
                 OnInteract();
             }
             else
-            {
-                OnDrop();
-            }
-        }
-    }
-
-    /// <summary>
-    /// For interaction system to toggle interact prompt on
-    /// </summary>
-    public void DisplayInteractUI()
-    {
-        if (_tabbedMenu != null && _canInteract)
-        {
-            _tabbedMenu.ToggleInteractPrompt(true, _interactPromptText);
-        }
-    }
-
-    /// <summary>
-    /// For interaction system to toggle interact prompt off
-    /// </summary>
-    public void HideInteractUI()
-    {
-        if (_tabbedMenu != null)
-        {
-            _tabbedMenu.ToggleInteractPrompt(false);
-        }
-    }
-
-    /// <summary>
-    /// Make wire end move to a position in front of the camera if the player
-    /// is interacting with this wire
-    /// </summary>
-    private void FixedUpdate()
-    {
-        if (_isInteracting)
-        {
-            Vector3 target = _cameraTrans.position + _cameraTrans.forward * _distanceFromPlayer;
-            _wireEndPosition.position = target;
-
-            if (Vector3.Distance(_wireEndPosition.position, _wireStartPosition.position) > _maxLength)
             {
                 OnDrop();
             }
@@ -154,7 +142,28 @@ public class MGWire : MonoBehaviour
     private void OnInteract()
     {
         _isInteracting = true;
-        _mgWireMovement.ChangeEndKinematic(true);
+        _jackRb.isKinematic = true;
+        _jackRb.freezeRotation = true;
+        StartCoroutine(RotateJack());
+    }
+
+    /// <summary>
+    /// Rotates the jack when the player picks it up
+    /// </summary>
+    /// <returns>Waits a fraction of a second</returns>
+    IEnumerator RotateJack()
+    {
+        float lerpValue = 0;
+        float newRotation;
+
+        while (lerpValue < 1)
+        {
+            newRotation = Mathf.Lerp(transform.rotation.z, 90f, lerpValue);
+            _jackRb.transform.eulerAngles = new Vector3(0, 0, newRotation);
+            lerpValue += 0.01f;
+
+            yield return new WaitForSeconds(0.01f);
+        }
     }
 
     /// <summary>
@@ -164,9 +173,18 @@ public class MGWire : MonoBehaviour
     private void OnDrop()
     {
         _isInteracting = false;
-        _mgWireMovement.ChangeEndKinematic(true);
-
-        PlaceWire();
+        
+        if (_currentSlot)
+        {
+            _jackRb.isKinematic = true;
+            StopAllCoroutines();
+            PlaceWire();
+        }
+        else
+        {
+            _jackRb.isKinematic = false;
+            _jackRb.freezeRotation = false;
+        }
     }
 
     /// <summary>
@@ -176,12 +194,11 @@ public class MGWire : MonoBehaviour
     /// <param name="slot"></param>
     public void EndTriggerEnter(MGWireSlot slot)
     {
-        _canConnectToSlot = true;
-        _currentSlot = slot;
-
-        // TODO: This is not a good spot to call PlaceWire(); Find a better
-        // solution where the placewire function properly "slots" the wire
-        OnDrop();
+        if (slot && !slot.ConnectedWire)
+        {
+            _canConnectToSlot = true;
+            _currentSlot = slot;
+        }
     }
     
     /// <summary>
@@ -190,7 +207,10 @@ public class MGWire : MonoBehaviour
     /// </summary>
     public void EndTriggerExit()
     {
-        _isCorrectlySlotted = false;
+        if (_currentSlot && _currentSlot.ConnectedWire && _currentSlot.ConnectedWire.Equals(this))
+        {
+            _currentSlot.RemoveWire();
+        }
         _canConnectToSlot = false;
         _currentSlot = null;
     }
@@ -202,8 +222,9 @@ public class MGWire : MonoBehaviour
     /// </summary>
     private void PlaceWire()
     {
-        if (_canConnectToSlot && _currentSlot && !_isCorrectlySlotted)
+        if (_canConnectToSlot && _currentSlot && !_currentSlot.IsConnected)
         {
+            _currentSlot.IsConnected = true;
             _isCorrectlySlotted = _currentSlot.CheckWire(this);
 
             // Prevents the moving of wires that are already in the right place
@@ -214,40 +235,9 @@ public class MGWire : MonoBehaviour
         }
         else if (!_canConnectToSlot)
         {
-            _mgWireMovement.ChangeEndKinematic(false);
+            _jackRb.isKinematic = false;
+            _jackRb.freezeRotation = false;
         }
-    }
-
-    /// <summary>
-    /// Creates a sphere on a segment to visualize the wire. This is temporary
-    /// until we have art assets
-    /// </summary>
-    /// <param name="parentObj">parent for the sphere</param>
-    /// <param name="isEndSegment">defaulted to false, true if this is 
-    /// the last segment so it knows to set it to a unique color.</param>
-    public void CreateSegmentStruct(Transform parentObj, bool isEndSegment = false)
-    {
-        GameObject segment;
-        if (isEndSegment)
-        {
-            segment = Instantiate(_avcJack);
-            segment.GetComponent<Renderer>().material = GetJackColor();
-        }
-        else
-        {
-            segment = Instantiate(_avcCable);
-        }
-
-        /*GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-        Destroy(sphere.GetComponent<Collider>());*/
-
-        //Destroy(segment.GetComponent<Collider>());
-
-        segment.gameObject.transform.parent = parentObj;
-        segment.gameObject.transform.position = parentObj.position;
-
-        // Did this used to have the collider form?
     }
 
     /// <summary>
@@ -275,5 +265,27 @@ public class MGWire : MonoBehaviour
         }
 
         return mat;
+    }
+    
+    /// <summary>
+    /// For interaction system to toggle interact prompt on
+    /// </summary>
+    public void DisplayInteractUI()
+    {
+        if (_tabbedMenu != null && _canInteract)
+        {
+            _tabbedMenu.ToggleInteractPrompt(true, _interactPromptText);
+        }
+    }
+
+    /// <summary>
+    /// For interaction system to toggle interact prompt off
+    /// </summary>
+    public void HideInteractUI()
+    {
+        if (_tabbedMenu != null)
+        {
+            _tabbedMenu.ToggleInteractPrompt(false);
+        }
     }
 }

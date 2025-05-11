@@ -8,8 +8,10 @@
 *******************************************************************/
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using PlaceboEntertainment.UI;
+using Unity.VisualScripting;
 
 public class MonologueManager : MonoBehaviour
 {
@@ -57,8 +59,12 @@ public class MonologueManager : MonoBehaviour
     {
         if (monologueIndex >= 0 && monologueIndex < _monologueNodes.Length)
         {
+            //For the timers to stop when monologuing
+            foreach (TimerStruct timerStruct in TimerManager.Instance._timers.ToList())
+            {
+                timerStruct.timer.StopTimer();
+            }
             _currentNode = _monologueNodes[monologueIndex];
-
             _playerController.LockCharacter(true);
             _playerInteractBehavior.StopDetectingInteractions();
             _tabbedMenu.DisplayDialogue(_playerName, _currentNode.MonologueText, null);
@@ -73,11 +79,19 @@ public class MonologueManager : MonoBehaviour
     /// </summary>
     public void ExitMonologue()
     {
+        //For the timers to start when monologuing has stopped
+        foreach (TimerStruct timerStruct in TimerManager.Instance._timers.ToList())
+        {
+            timerStruct.timer.StartTimer();
+        }
+        
+        //Put achievement "Find what is beyond the marion" here
+        
         _tabbedMenu.ToggleDialogue(false);
         _playerController.LockCharacter(false);
         _playerInteractBehavior.StartDetectingInteractions();
 
-        if (!_currentNode.Equals(default(MonologueNode)) && _currentNode.EventToTrigger != null)
+        if (!_currentNode.Equals(default(MonologueNode)) && !_currentNode.EventToTrigger.IsUnityNull())
         { 
             _currentNode.EventToTrigger.TriggerEvent(_currentNode.EventTag);
         }

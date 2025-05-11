@@ -21,6 +21,9 @@ public class MGWireState : MonoBehaviour
 
     public List<MGWireSlot> ListOfWireSlots;
 
+    [SerializeField] private Renderer screenToChange;
+    [SerializeField] private Material fixedScreenMaterial;
+
     private void OnEnable()
     {
         MGWireSlot.CorrectWire += AttachedWire;
@@ -40,7 +43,7 @@ public class MGWireState : MonoBehaviour
         //counts how many wires are connected
         foreach(MGWireSlot wireSlot in ListOfWireSlots)
         {
-            if(wireSlot.IsConnected)
+            if(wireSlot.IsCorrectWire)
             {
                 ++_currentAttachments;
             }
@@ -62,6 +65,7 @@ public class MGWireState : MonoBehaviour
     private void EndWireGame()
     {
         print("Wire game won");
+        screenToChange.material = fixedScreenMaterial;
         _gameWonEvent.TriggerEvent(NpcEventTags.Robot);
         WireGameWon?.Invoke();
     }

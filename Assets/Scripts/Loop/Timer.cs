@@ -6,6 +6,7 @@
 *    manager script does the creation, running, and deletion of these
 *******************************************************************/
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -36,7 +37,7 @@ public class Timer
             {
                 _timeRemaining = 0;
                 _isRunning = false;
-                if (_eventTimerCalls != null)
+                if (!_eventTimerCalls.IsUnityNull())
                 {
                     _eventTimerCalls.TriggerEvent(_NPCToAlert);
                 }

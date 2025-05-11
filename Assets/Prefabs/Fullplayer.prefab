@@ -357,6 +357,12 @@ MonoBehaviour:
       Data4: 842183475
     Path: event:/Characters/Player/Footsteps
   _footPrints: {fileID: 1044532239908415153}
+  _psControllerUI:
+  - {fileID: 2800000, guid: 186c32f4f86985940b55f941b864f3f7, type: 3}
+  - {fileID: 2800000, guid: 5f94cc31ec401304ebed7fd3649a45e3, type: 3}
+  _xboxControllerUI:
+  - {fileID: 2800000, guid: eeafc4917e82b114ca92b2cb75ba9335, type: 3}
+  - {fileID: 2800000, guid: 0c95a9b8ca343d34aa0ddc4195f75524, type: 3}
   Move:
     m_Name: Move
     m_Type: 0
@@ -487,7 +493,7 @@ Transform:
   m_GameObject: {fileID: 3909336886699579972}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08877446, y: 0.69455385, z: -0.08701222, w: 0.7086205}
-  m_LocalPosition: {x: -1.9895746, y: 0, z: -0.5399947}
+  m_LocalPosition: {x: -1.9895744, y: 0, z: -0.5399933}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -590,8 +596,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1422a104d2e5f424d9ac243d0662c5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraSpeedLowEnd: 100
-  _cameraSpeedHighEnd: 600
+  _cameraSpeedLowEnd: 75
+  _cameraSpeedHighEnd: 350
 --- !u!114 &710174775466095560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,9 +823,9 @@ MonoBehaviour:
   m_VerticalAxis:
     Value: 14.281382
     m_SpeedMode: 0
-    m_MaxSpeed: 300
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
+    m_MaxSpeed: 170
+    m_AccelTime: 0
+    m_DecelTime: 0
     m_InputAxisName: Mouse Y
     m_InputAxisValue: 0
     m_InvertInput: 1
@@ -841,9 +847,9 @@ MonoBehaviour:
   m_HorizontalAxis:
     Value: 88.85127
     m_SpeedMode: 0
-    m_MaxSpeed: 300
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
+    m_MaxSpeed: 170
+    m_AccelTime: 0
+    m_DecelTime: 0
     m_InputAxisName: Mouse X
     m_InputAxisValue: 0
     m_InvertInput: 0
@@ -916,7 +922,7 @@ Transform:
   m_GameObject: {fileID: 8865543037565822744}
   serializedVersion: 2
   m_LocalRotation: {x: 0.124306194, y: -0, z: -0, w: 0.99224395}
-  m_LocalPosition: {x: 16.141273, y: 2.063, z: -10.910879}
+  m_LocalPosition: {x: 0.04146611, y: 0.5, z: 0.23412389}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -993,7 +999,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 0
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 0
   m_DefaultBlend:
     m_Style: 1

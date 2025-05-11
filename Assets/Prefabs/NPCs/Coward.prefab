@@ -130,6 +130,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: You're welcome.
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -137,6 +138,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Ok...
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -157,6 +159,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: "You\u2019re not a very good engineer are you?"
         _nextResponseIndex: 01000000
         _advancesNpcState: 0
@@ -164,6 +167,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: That looks dangerous. Need some help?
         _nextResponseIndex: 04000000
         _advancesNpcState: 0
@@ -182,6 +186,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Let's see if we can figure out how to fix this.
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -189,6 +194,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 1
+        _achievementName: 
         _answer: I should be able to fix it with this!
         _nextResponseIndex: 0200000007000000
         _advancesNpcState: 0
@@ -196,6 +202,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Nah, you got this!
         _nextResponseIndex: 03000000
         _advancesNpcState: 0
@@ -214,6 +221,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Fix It
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -232,6 +240,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Good Luck!
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -250,6 +259,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Let's see if we can figure out how to fix this.
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -257,6 +267,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 1
+        _achievementName: 
         _answer: I should be able to fix it with this!
         _nextResponseIndex: 0500000007000000
         _advancesNpcState: 0
@@ -264,6 +275,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Nevermind, you got this!
         _nextResponseIndex: 06000000
         _advancesNpcState: 0
@@ -282,6 +294,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Fix It
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -300,6 +313,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Good Luck!
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -317,6 +331,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 11400000, guid: dd6c7f105503f694baf744be912b1974, type: 2}
         _eventTag: 1
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Whack it.
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -337,13 +352,15 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
-        _answer: Yes of course. <b>*Pets the coward*
+        _achievementName: PET_DOG
+        _answer: Yes of course. <b>*Pets Odon*
         _nextResponseIndex: 01000000
         _advancesNpcState: 0
         _endsDialogue: 0
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: Payment? For doing what?
         _nextResponseIndex: 02000000
         _advancesNpcState: 0
@@ -361,6 +378,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Next
         _nextResponseIndex: 03000000
         _advancesNpcState: 0
@@ -378,6 +396,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
@@ -395,6 +414,7 @@ MonoBehaviour:
       - _eventToTrigger: {fileID: 0}
         _eventTag: 0
         _hasPrerequisiteCheck: 0
+        _achievementName: 
         _answer: <b>Leave
         _nextResponseIndex: 
         _advancesNpcState: 0
