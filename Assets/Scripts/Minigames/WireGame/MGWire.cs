@@ -39,7 +39,6 @@ public class MGWire : MonoBehaviour
     [SerializeField] private GameObject _avcJack;
 
     [SerializeField] private GameObject _wireJack;
-    [SerializeField] private GameObject _jackPlacement;
 
     [SerializeField] float _totalWeight = 10f;
 
@@ -174,18 +173,10 @@ public class MGWire : MonoBehaviour
     private void OnDrop()
     {
         _isInteracting = false;
-        
-        /*if (_currentSlot)
-        {
-            _jackRb.isKinematic = true;
-            StopAllCoroutines();
-            //PlaceWire();
-        }*/
-        //else
-        //{
-            _jackRb.isKinematic = false;
-            _jackRb.freezeRotation = false;
-       // }
+
+        _jackRb.isKinematic = false;
+        _jackRb.freezeRotation = false;
+
     }
 
     /// <summary>
@@ -230,9 +221,7 @@ public class MGWire : MonoBehaviour
             _jackRb.isKinematic = true;
             StopAllCoroutines();
 
-            PrimeTween.Tween.Position(_wireJack.transform, endValue: _jackPlacement.transform.position, duration: 1, PrimeTween.Ease.InOutSine);
-            PrimeTween.Tween.Rotation(_wireJack.transform, endValue: _jackPlacement.transform.rotation, duration: 1, PrimeTween.Ease.InOutSine);
-            //transform.position = slot.transform.position;
+            _currentSlot.ConnectJackToSlot(_wireJack);
 
             _currentSlot.IsConnected = true;
             _isCorrectlySlotted = _currentSlot.CheckWire(this);
