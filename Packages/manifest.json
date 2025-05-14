@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.kyrylokuzyk.primetween": "file:../Assets/Plugins/PrimeTween/internal/com.kyrylokuzyk.primetween.tgz",
     "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net",
     "com.unity.ai.navigation": "1.1.5",
     "com.unity.burst": "1.8.19",

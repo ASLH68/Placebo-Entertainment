@@ -687,7 +687,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a65728030b6253408f6491c72125c40, type: 3}
---- !u!1 &692849394
+--- !u!1 &664358613
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -695,8 +695,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 692849396}
-  - component: {fileID: 692849395}
+  - component: {fileID: 664358615}
+  - component: {fileID: 664358614}
   m_Layer: 0
   m_Name: BurstCollisionWorld
   m_TagString: Untagged
@@ -704,13 +704,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &692849395
+--- !u!114 &664358614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 692849394}
+  m_GameObject: {fileID: 664358613}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1a161c4294214a4fbcb7e9e94800494, type: 3}
@@ -718,13 +718,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellSpans:
     m_AlignBytes: 16
---- !u!4 &692849396
+--- !u!4 &664358615
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 692849394}
+  m_GameObject: {fileID: 664358613}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1474,21 +1474,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 450258610595378226, guid: 9f258ac1d66d7ef45951b68dbe4b4687, type: 3}
-      propertyPath: _slotRenderer
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1927834980326762019, guid: 9f258ac1d66d7ef45951b68dbe4b4687, type: 3}
-      propertyPath: _slotRenderer
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4799262412181857750, guid: 9f258ac1d66d7ef45951b68dbe4b4687, type: 3}
       propertyPath: m_Name
       value: WireMinigame
-      objectReference: {fileID: 0}
-    - target: {fileID: 4810695947227558336, guid: 9f258ac1d66d7ef45951b68dbe4b4687, type: 3}
-      propertyPath: _slotRenderer
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5146622479169153036, guid: 9f258ac1d66d7ef45951b68dbe4b4687, type: 3}
       propertyPath: m_Mesh
@@ -1626,4 +1614,4 @@ SceneRoots:
   - {fileID: 271545483}
   - {fileID: 2092183453}
   - {fileID: 1832473130}
-  - {fileID: 692849396}
+  - {fileID: 664358615}
