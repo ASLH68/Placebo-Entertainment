@@ -144,7 +144,11 @@ public class MGWire : MonoBehaviour
         _isInteracting = true;
         _jackRb.isKinematic = true;
         _jackRb.freezeRotation = true;
-        StartCoroutine(RotateJack());
+
+        if (_currentSlot)
+        {
+            StartCoroutine(RotateJack());
+        }
     }
 
     /// <summary>
