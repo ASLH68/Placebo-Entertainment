@@ -49,7 +49,7 @@ public class MGWireSlot : MonoBehaviour
         
         ConnectedWire = wire;
 
-        if(wire.WireID ==_matchingWire)
+        if(wire.WireID == _matchingWire)
         {
             IsCorrectWire = true;
             CorrectWire?.Invoke();
