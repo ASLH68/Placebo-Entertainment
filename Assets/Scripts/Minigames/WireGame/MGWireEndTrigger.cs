@@ -38,14 +38,9 @@ public class MGWireEndTrigger : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         MGWireSlot slot;
-
         if (wire && other.TryGetComponent<MGWireSlot>(out slot))
         {
-            if (slot.ConnectedWire && slot.ConnectedWire.Equals(wire))
-            {
-                Debug.Log("End trigger " + wire.WireID);
-                wire.EndTriggerExit();
-            }
+            wire.EndTriggerExit();
         }
     }
 }

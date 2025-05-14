@@ -6,13 +6,22 @@
 // Brief Description : Start the fire minigame in the test gym
 *****************************************************************************/
 
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class TestGymStart : MonoBehaviour
 {
+    private MGWire[] wires;
+    
     // Start is called before the first frame update
     void Start()
     {
-        FindObjectOfType<FireManager>().StartMinigame(); 
+        wires = FindObjectsOfType<MGWire>();
+        
+        foreach (MGWire wire in wires)
+        {
+            wire.StartMinigame();
+        }
     }
 }

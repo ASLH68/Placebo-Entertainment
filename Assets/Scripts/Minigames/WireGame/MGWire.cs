@@ -144,7 +144,11 @@ public class MGWire : MonoBehaviour
         _isInteracting = true;
         _jackRb.isKinematic = true;
         _jackRb.freezeRotation = true;
-        StartCoroutine(RotateJack());
+
+        if (_currentSlot)
+        {
+            StartCoroutine(RotateJack());
+        }
     }
 
     /// <summary>
@@ -173,18 +177,10 @@ public class MGWire : MonoBehaviour
     private void OnDrop()
     {
         _isInteracting = false;
-        
-        if (_currentSlot)
-        {
-            _jackRb.isKinematic = true;
-            StopAllCoroutines();
-            PlaceWire();
-        }
-        else
-        {
-            _jackRb.isKinematic = false;
-            _jackRb.freezeRotation = false;
-        }
+
+        _jackRb.isKinematic = false;
+        _jackRb.freezeRotation = false;
+
     }
 
     /// <summary>
@@ -198,6 +194,7 @@ public class MGWire : MonoBehaviour
         {
             _canConnectToSlot = true;
             _currentSlot = slot;
+            PlaceWire(slot);
         }
     }
     
@@ -220,10 +217,16 @@ public class MGWire : MonoBehaviour
     /// to a slot, otherwise kinematics are disabled and it responds to
     /// physics.
     /// </summary>
-    private void PlaceWire()
+    private void PlaceWire(MGWireSlot slot)
     {
-        if (_canConnectToSlot && _currentSlot && !_currentSlot.IsConnected)
+        if (slot && _canConnectToSlot && _currentSlot && !_currentSlot.IsConnected)
         {
+            _isInteracting = false;
+            _jackRb.isKinematic = true;
+            StopAllCoroutines();
+
+            _currentSlot.ConnectJackToSlot(_wireJack);
+
             _currentSlot.IsConnected = true;
             _isCorrectlySlotted = _currentSlot.CheckWire(this);
 

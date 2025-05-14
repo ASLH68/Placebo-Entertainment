@@ -17,10 +17,11 @@ public class MGWireSlot : MonoBehaviour
     public static Action CorrectWire;
 
     [SerializeField] private MGWire.EWireID _matchingWire;
-    [SerializeField] private MeshRenderer _slotRenderer;
     [SerializeField] private Color _slotColor;
     [HideInInspector] public bool IsConnected;
     [HideInInspector] public bool IsCorrectWire;
+
+    [SerializeField] private GameObject _jackPosition;
     
 
     [Header("VFX Stuff")]
@@ -34,8 +35,6 @@ public class MGWireSlot : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        _slotRenderer.material.color = _slotColor;
-
         //Adds To Slot List in Wire State Script
         GameObject robo = GameObject.FindWithTag("WireManager");
         robo.GetComponent<MGWireState>().ListOfWireSlots.Add(this);
@@ -52,7 +51,7 @@ public class MGWireSlot : MonoBehaviour
         
         ConnectedWire = wire;
 
-        if(wire.WireID ==_matchingWire)
+        if(wire.WireID == _matchingWire)
         {
             IsCorrectWire = true;
             CorrectWire?.Invoke();
@@ -62,6 +61,12 @@ public class MGWireSlot : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void ConnectJackToSlot(GameObject jack)
+    {
+        PrimeTween.Tween.Position(jack.transform, endValue: _jackPosition.transform.position, duration: 1, PrimeTween.Ease.InOutSine);
+        PrimeTween.Tween.Rotation(jack.transform, endValue: _jackPosition.transform.rotation, duration: 1, PrimeTween.Ease.InOutSine);
     }
 
     public void RemoveWire()
