@@ -8,9 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainGame/MainMenuScene.unity
     guid: 434bfe2d41104ae4e94642d0a7a857c0
-  - enabled: 0
-    path: Assets/Scenes/FUSEDemo/FUSEGameScene.unity
-    guid: 5a916e3c3c84b1f47aad64ec9607057c
+  - enabled: 1
+    path: Assets/Scenes/MainGame/IntroScene.unity
+    guid: 141752bf3b1737c41ae866c2047e515d
   - enabled: 1
     path: Assets/Scenes/MainGame/GameScene.unity
     guid: 72c608e9732cb3a4ab1e92df34ff43cf
