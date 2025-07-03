@@ -83,23 +83,25 @@ public class SlideshowManager : MonoBehaviour
         _controllerDetection.Enable();
         _mouseDetection.Enable();
 
-        if (IsPlayingVideo)
-        {
-            // Skip video on hold, pause on press
-            _skipVideo.performed +=
-                ctx =>
+        
+        // Skip video on hold, pause on press
+        _skipVideo.performed +=
+            ctx =>
+            {
+                if (IsPlayingVideo)
                 {
                     if (ctx.interaction is HoldInteraction)
                         OnSkipVideo();
                     else // Could check for PressInteraction but easier to just assume it's a press.
                         TogglePlayPause();
-                };
+                }
+            };
 
-            _skipVideo.started += ctx => DisplaySkipMeter(true);
-            _skipVideo.canceled += ctx => DisplaySkipMeter(false);
+        _skipVideo.started += ctx => DisplaySkipMeter(true);
+        _skipVideo.canceled += ctx => DisplaySkipMeter(false);
 
-            _skipVideo.started += DetectInputType;
-        }
+        _skipVideo.started += DetectInputType;
+        
 
         _controllerDetection.performed += DetectInputType;
         _mouseDetection.performed += DetectInputType;
@@ -159,15 +161,14 @@ public class SlideshowManager : MonoBehaviour
     /// Invoked when slideshow is over
     /// </summary>
     private void DonePlaying(VideoPlayer vp)
-    {
-        IsPlayingVideo = false;
-            
+    {    
         if (_isIntroVideoPlayer)
         {
             SceneManager.LoadScene(_levelSceneBuildIndex);
         }
         else if (!_wasCreditsShown)
         {
+            DisplaySkipMeter(false);
             _selectedAudio = _creditsVideo.Audio;
             _slideshowPlayer.clip = _creditsVideo.Footage;
             _slideshowPlayer.Prepare();
@@ -275,6 +276,8 @@ public class SlideshowManager : MonoBehaviour
     /// <param name="shouldFill"></param>
     private void DisplaySkipMeter(bool shouldFill)
     {
+        if (!IsPlayingVideo) { return; }
+
         StopAllCoroutines();
 
         if (shouldFill)
